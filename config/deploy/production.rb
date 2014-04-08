@@ -6,7 +6,7 @@
 # Don't declare `role :all`, it's a meta role
 role :app, %w{passenger@integra5.ing.puc.cl}
 # role :web, %w{deploy@example.com}
-# role :db,  %w{deploy@example.com}
+role :db,  %w{passenger@integra5.ing.puc.cl}
 
 # Extended Server Syntax
 # ======================
