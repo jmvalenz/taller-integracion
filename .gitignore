@@ -17,3 +17,5 @@
 
 # Ignore all local files
 *.local.yml
+
+/db/schema.rb
