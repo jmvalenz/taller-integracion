@@ -60,3 +60,15 @@ Manejo de configuraciones
 
 Hay una gema llamada rails_config que permite tener la información de la aplicación en un solo archivo, y separarlo para producción y desarrollo.
 Toda la información local (base de datos de su computador, llaves de apis o cualquier cosa que debiera ser diferente al servidor de producción) debe estar guardada en el archivo **config/settings/development.local.yml**. Así, además de no publicar sus contraseñas al resto del grupo, podemos tener todo más organizado.
+
+Desarrollo
+---------------
+
+### Convenciones
+
+Para tener todo bien organizado y no tener conflictos posibles, propongo las siguientes convenciones (los que ya empezaron a hacer cosas pueden adaptarlas a esto o dejarlo así como está, pero bien comentado).
+
+*   Nombres de variables: una_variable = "contenido"
+*   Nombres de modelos en inglés
+*   Normalizar la base de datos (para aprovechar funcionalidades de Rails)
+*   Si es necesario comentar mucho el código, escribir el código de nuevo de manera más simple
