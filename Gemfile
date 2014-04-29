@@ -45,5 +45,6 @@ gem 'capistrano-rvm'
 gem 'capistrano-bundler'
 
 gem 'net-ssh', '2.7.0'
+gem 'rails_config', :git => 'https://github.com/railsjedi/rails_config'
 # Use debugger
 # gem 'debugger', group: [:development, :test]

@@ -1,3 +1,10 @@
+GIT
+  remote: https://github.com/railsjedi/rails_config
+  revision: f119de5922f7b0ff2db2d2479fbc4a63b7bc427f
+  specs:
+    rails_config (0.4.1)
+      activesupport (>= 3.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -142,6 +149,7 @@ DEPENDENCIES
   net-ssh (= 2.7.0)
   pg
   rails (= 4.0.4)
+  rails_config!
   sass-rails (~> 4.0.2)
   sdoc
   turbolinks
