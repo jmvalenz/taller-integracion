@@ -1,7 +1,0 @@
-database:
-  adapter: postgresql
-  encoding: unicode
-  database: taller-integracion_production
-  pool: 5
-  username: taller_integracion
-  password: 'T@ll3r!nt3g4'
