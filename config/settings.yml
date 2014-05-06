@@ -1,0 +1,7 @@
+database:
+  adapter: postgresql
+  encoding: unicode
+  database: taller-integracion_development
+  pool: 5
+  username: taller-integracion
+  password: g5tallerintegracion
