@@ -21,14 +21,16 @@ class Warehouse
 
   def Warehouse.get_json_response(path, data, method, auth_string)
     url = URI.join(STOCKS_URL, path)
-    url.query = URI.encode_www_form(data)
     if method == "GET"
+      url.query = URI.encode_www_form(data)
       req = Net::HTTP::Get.new(url.request_uri)
     elsif method == "POST"
       req = Net::HTTP::Post.new(url.request_uri)
+      req.set_form_data data
     elsif method == "DELETE"
       req = Net::HTTP::Delete.new(url.request_uri)
     end
+    Rails.logger.debug("Authorization: " + get_authorization_string(auth_string))
     req.add_field("Authorization", get_authorization_string(auth_string))
     res = Net::HTTP.start(url.host, url.port) {|http|
       http.request(req)
@@ -47,6 +49,14 @@ class Warehouse
       response << Depot.parse_from_json(json_depot)
     end
     response
+  end
+
+  def move_stock(product_id, destination_depot)
+    method = "POST"
+    string = method + product_id + destination_depot
+    path = "/moveStock"
+    data = { "productoId" => product_id, "almacenId" => destination_depot }
+    json_depots = Warehouse.get_json_response(path, data, method, string)
   end
 
   

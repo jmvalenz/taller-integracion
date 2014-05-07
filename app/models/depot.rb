@@ -47,4 +47,6 @@ class Depot
     Warehouse.get_json_response(path, data, method, string)
   end
 
+  
+
 end
