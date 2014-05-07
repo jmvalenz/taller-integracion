@@ -5,3 +5,16 @@ database:
   pool: 5
   username: taller-integracion
   password: g5tallerintegracion
+
+stocks_management_system:
+  public_key: grupo5
+  private_key: P9A6XoK8
+
+vtiger:
+  user: grupo5
+  password: 823823k
+
+orders_sftp_system:
+  user: grupo5
+  password: 823823k
+  url: sftp://integra.ing.puc.cl/
