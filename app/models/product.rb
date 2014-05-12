@@ -35,4 +35,15 @@ class Product < ActiveRecord::Base
     end
   end
 
+
+  ## NOT FINISHED
+  def Product.find_or_create_from_hash(hash)
+    product = Product.find_by(sku: hash[:sku])
+    if product
+      product.update_attributes(hash)
+    else
+      product = Product.create(hash)
+    end
+  end
+
 end
