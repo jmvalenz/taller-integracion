@@ -10,6 +10,7 @@ class Product < ActiveRecord::Base
     file = open(filename)
     content = file.read
     Product.load_products(JSON.parse(content, symbolize_names: true))
+    file.close
   end
 
   def Product.load_products(array_of_hashes)
