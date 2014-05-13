@@ -54,11 +54,11 @@ class Warehouse
     json_depots = Warehouse.get_json_response(path, data, method, string)
   end
 
-  def despachar_stock(product_id, address, price, order_id)
+  def dispatch_stock(product_id, address, price, order_id)
     method = "DELETE"
     string = method + product_id + address + price.to_s + order_id
     path = "/stock"
-    data = { "productId" => product_id, "dirección" => address, "precio" => price, "pedidoId" => order_id }
+    data = { "productoId" => product_id, "direccion" => address, "precio" => price, "pedidoId" => order_id }
     json_depots = Warehouse.get_json_response(path, data, method, string)
   end
 
@@ -86,6 +86,6 @@ class Warehouse
     end
     response
   end
-  
+
 
 end
