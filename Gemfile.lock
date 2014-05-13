@@ -48,6 +48,10 @@ GEM
     capistrano-rvm (0.1.1)
       capistrano (~> 3.0)
       sshkit (~> 1.2)
+    climate_control (0.0.3)
+      activesupport (>= 3.0)
+    cocaine (0.5.4)
+      climate_control (>= 0.0.3, < 1.0)
     coffee-rails (4.0.1)
       coffee-script (>= 2.2.0)
       railties (>= 4.0.0, < 5.0)
@@ -55,8 +59,15 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.7.0)
+    dropbox-api (0.4.2)
+      hashie
+      multi_json
+      oauth
+    dropbox-sdk (1.6.4)
+      json
     erubis (2.7.0)
     execjs (2.0.2)
+    hashie (2.1.1)
     hike (1.2.3)
     hirb (0.7.1)
     i18n (0.6.9)
@@ -76,6 +87,12 @@ GEM
     net-scp (1.1.2)
       net-ssh (>= 2.6.5)
     net-ssh (2.7.0)
+    oauth (0.4.7)
+    paperclip (4.1.1)
+      activemodel (>= 3.0.0)
+      activesupport (>= 3.0.0)
+      cocaine (~> 0.5.3)
+      mime-types
     pg (0.17.1)
     polyglot (0.3.4)
     rack (1.5.2)
@@ -149,10 +166,13 @@ DEPENDENCIES
   capistrano-rails (~> 1.1.0)
   capistrano-rvm
   coffee-rails (~> 4.0.0)
+  dropbox-api
+  dropbox-sdk
   hirb
   jbuilder (~> 1.2)
   jquery-rails
   net-ssh (= 2.7.0)
+  paperclip
   pg
   rails (= 4.0.4)
   rails_config!
