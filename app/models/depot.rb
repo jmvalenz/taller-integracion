@@ -27,10 +27,10 @@ class Depot
   end
 
   def skus_with_stock
-    @skus_with_stock ||= get_sku_with_stock
+    @skus_with_stock ||= get_skus_with_stock
   end
 
-  def get_sku_with_stock
+  def get_skus_with_stock
     method = "GET"
     string = method + self._id
     path = "/skusWithStock"
@@ -47,6 +47,6 @@ class Depot
     Warehouse.get_json_response(path, data, method, string)
   end
 
-  
+
 
 end
