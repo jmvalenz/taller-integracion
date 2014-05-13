@@ -3,7 +3,7 @@ class Warehouse
 
   STOCKS_URL = "http://bodega-integracion-2014.herokuapp.com"
 
-  attr_accessor :depots
+  attr_accessor :depots, :delivery_depot
 
   def depots
     @depots ||= load_depots
@@ -13,28 +13,60 @@ class Warehouse
     @depots = load_depots
   end
 
+  def delivery_depot
+    unless @delivery_depot
+      depots.each do |depot|
+        if depot.type == "delivery"
+          @delivery_depot = depot
+          return @delivery_depot
+        end
+      end
+    end
+    @delivery_depot
+  end
+
   def get_total_stock(sku)
     300
+  end
+
+  def move_products_to_warehouse!(sku, quantity, destination_depot)
+    # Mover elementos a almacen de despacho y enviarlos a la bodega de destino
+    quantity_left = quantity
+
+    depots.each do |depot|
+      if depot.type != "delivery"
+        # Encontrar elementos con sku pedido, moverlos a despacho y enviar
+        products = depot.get_stock(sku, quantity_left)
+        quantity_left = quantity_left - products.count
+        products.each do |product|
+          # Ver la forma de hacer asíncronamente
+          move_stock(product[:_id], delivery_depot._id)
+          move_stock_to_warehouse(product[:_id], destination_depot)
+        end
+        break if quantity_left <= 0
+      end
+    end
   end
 
   ##################### SYSTEM METHODS #####################
   def Warehouse.get_json_response(path, data, method, auth_string)
     url = URI.join(STOCKS_URL, path)
-    if method == "GET"
+    case method
+    when "GET"
       url.query = URI.encode_www_form(data)
       req = Net::HTTP::Get.new(url.request_uri)
-    elsif method == "POST"
+    when "POST"
       req = Net::HTTP::Post.new(url.request_uri)
       req.set_form_data data
-    elsif method == "DELETE"
+    when "DELETE"
       req = Net::HTTP::Delete.new(url.request_uri)
       req.set_form_data data
     end
     Rails.logger.debug("[DEBUG] Authorization: " + get_authorization_string(auth_string))
     req.add_field("Authorization", get_authorization_string(auth_string))
-    res = Net::HTTP.start(url.host, url.port) {|http|
+    res = Net::HTTP.start(url.host, url.port) do |http|
       http.request(req)
-    }
+    end
     JSON.parse(res.body, symbolize_names: true)
   end
 
