@@ -27,9 +27,26 @@ class Warehouse
 
   def get_total_stock(sku)
     stock = 0
+    sync = Mutex.new
+    threads = []
+
     depots.each do |depot|
-      stock = stock + depot.get_stock(sku).count
+      threads << Thread.new do
+        depot.get_skus_with_stock.each do |item|
+          if item[:_id] == sku
+            sync.synchronize do
+              stock += item[:total]
+            end
+            break
+          end
+        end
+      end
     end
+
+    threads.each do |t|
+      t.join
+    end
+
     stock
   end
 
