@@ -26,7 +26,11 @@ class Warehouse
   end
 
   def get_total_stock(sku)
-    300
+    stock = 0
+    depots.each do |depot|
+      stock = stock + depot.get_stock(sku).count
+    end
+    stock
   end
 
   def move_products_to_warehouse!(sku, quantity, destination_depot)
@@ -92,14 +96,6 @@ class Warehouse
     path = "/stock"
     data = { "productoId" => product_id, "direccion" => address, "precio" => price, "pedidoId" => order_id }
     json_depots = Warehouse.get_json_response(path, data, method, string)
-  end
-  
-  def stock_sku (sku)
-    stock = 0
-    depots.each do |depot|
-      stock = stock + depot.get_stock(sku).count
-    end
-    stock
   end
 
   private
