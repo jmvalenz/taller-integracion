@@ -1,6 +1,6 @@
 class Crm < ActiveRecord::Base
 	
-	#include HTTParty
+	rails include HTTParty
   	#base_uri 'http://integra.ing.puc.cl/vtigerCRM'
   	#default_params :output => 'json'
   	#format :json
@@ -10,7 +10,8 @@ class Crm < ActiveRecord::Base
   	end
 
   	def self.login(username, password)
-    	post('/webservice.php?operation=login', :query => {:username => username, :accessKey => password})
+    	#token = getchallenge(username)
+    	post('http://integra.ing.puc.cl/vtigerCRM/webservice.php?operation=login', :query => {:username => username, :accessKey => password})
   	end
 
 end
