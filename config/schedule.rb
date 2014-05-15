@@ -18,6 +18,3 @@
 # end
 
 # Learn more: http://github.com/javan/whenever
-every 5.minutes do
-  runner "Rails.logger.debug('CRONJOB :)')"
-end
