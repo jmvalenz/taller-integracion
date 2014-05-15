@@ -70,6 +70,9 @@ GEM
     hashie (2.1.1)
     hike (1.2.3)
     hirb (0.7.1)
+    httparty (0.13.1)
+      json (~> 1.8)
+      multi_xml (>= 0.5.2)
     i18n (0.6.9)
     jbuilder (1.5.3)
       activesupport (>= 3.0.0)
@@ -84,6 +87,7 @@ GEM
     mime-types (1.25.1)
     minitest (4.7.5)
     multi_json (1.9.2)
+    multi_xml (0.5.5)
     net-scp (1.1.2)
       net-ssh (>= 2.6.5)
     net-ssh (2.7.0)
@@ -94,6 +98,7 @@ GEM
       cocaine (~> 0.5.3)
       mime-types
     pg (0.17.1)
+    pg (0.17.1-x64-mingw32)
     polyglot (0.3.4)
     rack (1.5.2)
     rack-test (0.6.2)
@@ -159,6 +164,7 @@ GEM
 
 PLATFORMS
   ruby
+  x64-mingw32
 
 DEPENDENCIES
   capistrano (~> 3.1.0)
@@ -169,6 +175,7 @@ DEPENDENCIES
   dropbox-api
   dropbox-sdk
   hirb
+  httparty
   jbuilder (~> 1.2)
   jquery-rails
   net-ssh (= 2.7.0)
