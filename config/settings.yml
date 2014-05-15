@@ -11,8 +11,8 @@ stocks_management_system:
   private_key: P9A6XoK8
 
 vtiger:
-  user: grupo5
-  password: 823823k
+  username: grupo5
+  accessKey: NRh3qzBhggdEoMfz
 
 orders_sftp_system:
   user: grupo5
