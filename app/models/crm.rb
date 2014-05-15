@@ -5,8 +5,11 @@ class Crm < ActiveRecord::Base
   	default_params :output => 'json'
   	format :json
 
-  	def Crm.get_challenge
-    	response = get('/webservice.php?', query: { operation: :getchallenge, username: Settings.vtiger.username })
+  	
+  	def Crm.query(ship_id)
+  	  session_id = login[:result][:sessionName]
+	  query = "select * from Contacts where firstname="+ship_id+";"
+	  response = get('/webservice.php?', query: { operation: :query, sessionName: session_id.to_s, query: query})
       JSON.parse(response.body, symbolize_names: true)
   	end
 
@@ -19,7 +22,11 @@ class Crm < ActiveRecord::Base
       JSON.parse(response.body, symbolize_names: true)
   	end
 
+  	private 
+  	def Crm.get_challenge
+      response = get('/webservice.php?', query: { operation: :getchallenge, username: Settings.vtiger.username })
+      JSON.parse(response.body, symbolize_names: true)
+  	end
+
 end
-
-
 
