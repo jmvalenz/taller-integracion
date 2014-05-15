@@ -10,6 +10,7 @@ class Product < ActiveRecord::Base
     file = open(filename)
     content = file.read
     Product.load_products(JSON.parse(content, symbolize_names: true))
+    file.close
   end
 
   def Product.load_products(array_of_hashes)
@@ -32,6 +33,17 @@ class Product < ActiveRecord::Base
           product.categories << category
         end
       end
+    end
+  end
+
+
+  ## NOT FINISHED
+  def Product.find_or_create_from_hash(hash)
+    product = Product.find_by(sku: hash[:sku])
+    if product
+      product.update_attributes(hash)
+    else
+      product = Product.create(hash)
     end
   end
 

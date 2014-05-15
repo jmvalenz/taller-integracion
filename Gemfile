@@ -51,7 +51,14 @@ gem 'capistrano-rails', '~> 1.1.0'
 gem 'capistrano-rvm'
 gem 'capistrano-bundler'
 
+gem 'dropbox-api'
+gem 'paperclip'
+gem 'dropbox-sdk'
+
 gem 'net-ssh', '2.7.0'
 gem 'rails_config', :git => 'https://github.com/railsjedi/rails_config'
+gem 'versionist'
+
+
 # Use debugger
 # gem 'debugger', group: [:development, :test]
