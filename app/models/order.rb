@@ -17,7 +17,7 @@ class Order < ActiveRecord::Base
       file.close
   	end
 
-  	def Order.load_orders(doc)    
+  	def Order.load_orders(doc)
       doc.xpath("//Pedidos").each do |pedido|
         order = Product_order.create({
         sku: pedido.xpath("//sku").to_s[/>(.*?)</, 1], 
