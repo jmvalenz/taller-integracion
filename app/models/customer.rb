@@ -1,5 +1,10 @@
-class Customer < ActiveRecord::Base
+class Customer
+  include ActiveModel::Model
 
-  has_many :orders, dependent: :destroy
+  attr_accessor :_id, :first_name, :last_name, :street, :city, :state
+
+
+
+
 
 end
