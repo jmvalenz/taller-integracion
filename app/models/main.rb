@@ -1,6 +1,3 @@
-require 'net/sftp'
-require 'nokogiri'
-
 class Main
 
   ################# VENTA MAYORISTA #################
