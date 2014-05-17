@@ -10,11 +10,11 @@ class Reservation < ActiveRecord::Base
 
 
     client.authorization = Signet::OAuth2::Client.new(
-      :token_credential_uri => 'https://accounts.google.com/o/oauth2/token',
-      :audience => 'https://accounts.google.com/o/oauth2/token',
-      :scope => 'https://spreadsheets.google.com/feeds',
-      :issuer => '98758856993-2d0o5gfdtno8ee3smg2kbot69j271qg2@developer.gserviceaccount.com',
-      :signing_key => key)
+      token_credential_uri: 'https://accounts.google.com/o/oauth2/token',
+      audience: 'https://accounts.google.com/o/oauth2/token',
+      scope: 'https://spreadsheets.google.com/feeds',
+      issuer: '98758856993-2d0o5gfdtno8ee3smg2kbot69j271qg2@developer.gserviceaccount.com',
+      signing_key: key)
     client.authorization.fetch_access_token!
     access_token = client.authorization.access_token
 
