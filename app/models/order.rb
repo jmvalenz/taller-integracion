@@ -4,7 +4,6 @@ class Order < ActiveRecord::Base
   has_many :product_order, dependent: :destroy
 
     def Order.load(filename)
-	    file = open(filename)
 	    doc = Nokogiri::XML(file)
 	    customer = Customer.find_or_create_by(rut: doc.xpath("//Pedidos//rut").to_s[/>(.*?)</, 1])
       doc.xpath("//Pedidos//rut").to_s[/>(.*?)</, 1]
