@@ -17,7 +17,7 @@ vtiger:
 orders_sftp_system:
   user: grupo5
   password: 823823k
-  url: sftp://integra.ing.puc.cl/
+  url: integra.ing.puc.cl
 
 mailer:
   domain: "gmail.com"

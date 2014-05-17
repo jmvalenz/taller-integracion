@@ -5,6 +5,7 @@ class Order < ActiveRecord::Base
 
 
   def Order.load(file)
+
     name = file.name
     doc = Nokogiri::XML(file)
     
@@ -34,8 +35,8 @@ class Order < ActiveRecord::Base
 
   def Order.check_new_Order()
     Net::SFTP.start(Settings.orders_sftp_system.url, Settings.orders_sftp_system.user, password: Settings.orders_sftp_system.password) do |sftp|
-    
-      sftp.dir.foreach("/home/grupo5/Pedidos/") do |file|  
+      sftp.dir.foreach("/home/grupo5/Pedidos/") do |file|
+        next if file.name == "." || file.name == ".."
         order_id = file.name[/pedido_(.*?).xml/, 1]
         if not Order.exists?(order_id: order_id)
           sftp.file.open("/home/grupo5/Pedidos/" + name) do |var_file|

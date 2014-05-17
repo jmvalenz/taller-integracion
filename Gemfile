@@ -55,6 +55,9 @@ gem 'dropbox-api'
 gem 'paperclip'
 gem 'dropbox-sdk'
 
+gem 'net-sftp'
+gem 'nokogiri'
+
 gem 'net-ssh', '2.7.0'
 gem 'rails_config', :git => 'https://github.com/railsjedi/rails_config'
 gem 'versionist'
@@ -62,7 +65,6 @@ gem 'versionist'
 gem 'delayed_job_active_record'
 gem 'whenever', require: false
 
-gem 'google/api_client'
 gem 'google_drive'
 
 
