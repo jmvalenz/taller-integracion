@@ -62,6 +62,9 @@ gem 'versionist'
 gem 'delayed_job_active_record'
 gem 'whenever', require: false
 
+gem 'google/api_client'
+gem 'google_drive'
+
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]

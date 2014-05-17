@@ -34,12 +34,12 @@ class Order < ActiveRecord::Base
 
   def Order.check_new_Order()
     Net::SFTP.start(Settings.orders_sftp_system.url, Settings.orders_sftp_system.user, password: Settings.orders_sftp_system.password) do |sftp|
-    # sftp.file.open("/home/grupo5/Pedidos/pedido_1001.xml") do |file|
-
+    
       sftp.dir.foreach("/home/grupo5/Pedidos/") do |file|  
         order_id = file.name[/pedido_(.*?).xml/, 1]
         if not Order.exists?(order_id: order_id)
-          Order.load(file)
+          sftp.file.open("/home/grupo5/Pedidos/" + name) do |var_file|
+            Order.load(var_file)
         end
       end
     end

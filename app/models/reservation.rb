@@ -7,7 +7,7 @@ class Reservation < ActiveRecord::Base
     while not ws[i,1].empty? and ws[i,4].empty?  do
       product_reservation = Product_reservation.create({
         sku: ws[i,1], 
-        rut: ws[i,2], 
+        customer_id: ws[i,2], 
         amount: ws[i,3]
       })
       ws[i,4] = "Si"
