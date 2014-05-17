@@ -59,6 +59,9 @@ gem 'net-ssh', '2.7.0'
 gem 'rails_config', :git => 'https://github.com/railsjedi/rails_config'
 gem 'versionist'
 
+gem 'delayed_job_active_record'
+gem 'whenever', require: false
+
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]

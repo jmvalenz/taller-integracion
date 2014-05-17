@@ -32,7 +32,7 @@ class Crm < ActiveRecord::Base
       Customer.new(_id: i, first_name: fn, last_name: ln, street: s, city: c, state: st)
   	end
 
-  	def Crm.login
+    def Crm.login
       # Obtengo el challenge token
       token = get_challenge[:result][:token]
       # El API accessKey es MD5(token + accessKey)
@@ -47,10 +47,10 @@ class Crm < ActiveRecord::Base
       JSON.parse(response.body, symbolize_names: true)
     end
 
-  	private 
-  	def Crm.get_challenge
+    private 
+    def Crm.get_challenge
       response = get('/webservice.php?', query: { operation: :getchallenge, username: Settings.vtiger.username })
       JSON.parse(response.body, symbolize_names: true)
-  	end
+    end
 
 end
