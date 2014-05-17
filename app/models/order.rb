@@ -7,12 +7,11 @@ class Order < ActiveRecord::Base
 	    doc = Nokogiri::XML(file)
 	   
       order = Order.create_by({
-        customer_id: doc.xpath("//Pedidos//rut").to_s[/>(.*?)</, 1]
-        address_id: doc.xpath("//Pedidos//direccionId").to_s[/>(.*?)</, 1]
-        date: doc.xpath("//Pedidos/fecha").to_s[/>(.*?)</, 1]
-        time: doc.xpath("//Pedidos/hora").to_s[/>(.*?)</, 1]
+        customer_id: doc.xpath("//Pedidos//rut").to_s[/>(.*?)</, 1],
+        address_id: doc.xpath("//Pedidos//direccionId").to_s[/>(.*?)</, 1],
+        date: doc.xpath("//Pedidos/fecha").to_s[/>(.*?)</, 1],
+        time: doc.xpath("//Pedidos/hora").to_s[/>(.*?)</, 1],
         date_delivery: doc.xpath("//Pedidos//fecha").to_s[/>(.*?)</, 1]
-        
       })
 
       order.load_orders(doc)
