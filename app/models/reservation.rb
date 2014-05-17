@@ -2,8 +2,6 @@ class Reservation < ActiveRecord::Base
 
     has_many :product_reservation, dependent: :destroy
 
-
-
   def Reservation.load_preservations(ws)
     i = 5
     while not ws[i,1].empty? and ws[i,4].empty?  do
