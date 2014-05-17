@@ -1,4 +1,4 @@
-class Crm < ActiveRecord::Base
+class Crm
   
   include HTTParty
     base_uri 'http://integra.ing.puc.cl/vtigerCRM'

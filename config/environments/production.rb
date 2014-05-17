@@ -77,4 +77,16 @@ TallerIntegracion::Application.configure do
 
   # Use default logging formatter so that PID and timestamp are not suppressed.
   config.log_formatter = ::Logger::Formatter.new
+
+  config.action_mailer.default_url_options = { host: Settings.domain.host, port: Settings.domain.port }
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    address:               "smtp.gmail.com",
+    port:                  587,
+    domain:                Settings.mailer.domain,
+    user_name:             Settings.mailer.user_name,
+    password:              Settings.mailer.password,
+    authentication:        "plain",
+    enable_starttls_auto:  true
+  }
 end
