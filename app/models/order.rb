@@ -29,6 +29,7 @@ class Order < ActiveRecord::Base
         sku: pedido.xpath("//sku").to_s[/>(.*?)</, 1], 
         amount: pedido.xpath("//cantidad").to_s[/>(.*?)</, 1]
     })
+    end
   end
 
   def Order.check_new_Order()
