@@ -14,7 +14,7 @@ class Main
       # Revisar cada sub pedido
       # order.product_orders.each do |product_order|
         # Revisar stock para sku solicitado
-        # 
+        # warehouse.get_total_sku
         # Reviso reservas del usuario del pedido
         # Si no tiene reserva & no hay stock
           # se quiebra
