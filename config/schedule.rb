@@ -19,6 +19,3 @@
 
 # Learn more: http://github.com/javan/whenever
 
-every 5.minutes do
-  runner "Test.test.deliver"
-end
