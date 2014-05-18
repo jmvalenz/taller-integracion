@@ -37,6 +37,7 @@ end
 
 group :development do
   gem 'hirb'
+  gem 'pry'
 end
 
 # Use ActiveModel has_secure_password

@@ -5,7 +5,9 @@ class Main
   #Este metodo es llamado una vez al día
   def wholesale_process
     # Cargamos todos los pedidos (orders) que tengan deliver_date <= hoy & not_delivered
-    
+    Order.not_delivered.each do |order|
+      
+    end
     # Para cada pedido hacer:
     # Order.where(:delivery_date.lte => Date.today, delivered: false).each do |order|
       # Revisar cada sub pedido
@@ -27,10 +29,8 @@ class Main
         # enviar informacion a data-warehouse
   end
 
-  def fetch_orderd
-    # Revisar FTP.
-    # Si hay pedidos nuevos, ejecuto wholesale_process
-
+  def fetch_orders
+    Order.check_new_orders
   end
 
   def passes_validation
