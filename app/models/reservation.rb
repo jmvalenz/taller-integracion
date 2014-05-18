@@ -1,6 +1,6 @@
 class Reservation < ActiveRecord::Base
 
-    has_many :product_reservation, dependent: :destroy
+  has_many :product_reservation, dependent: :destroy
 
   def Reservation.load_preservations(ws)
     i = 5
@@ -37,3 +37,5 @@ class Reservation < ActiveRecord::Base
     ws = session.spreadsheet_by_key("0As9H3pQDLg79dEZqd1YzYl80Y0Q0TjlJZDNTclFnTUE").worksheets[0]
     self.load_preservations(ws)
   end
+
+end
