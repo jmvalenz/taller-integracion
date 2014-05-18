@@ -1,15 +1,17 @@
 class Reservation < ActiveRecord::Base
 
-  has_many :product_reservation, dependent: :destroy
+  belongs_to :customer
 
-  def Reservation.load_preservations(ws)
+  def Reservation.load_reservations(ws)
     i = 5
     while not ws[i,1].empty? and ws[i,4].empty?  do
-      product_reservation = Product_reservation.create({
+      reservation_info = {
         sku: ws[i,1], 
         customer_id: ws[i,2], 
         amount: ws[i,3]
-      })
+      }
+
+      product_reservation = Reservation.create(reservation_info)
       ws[i,4] = "Si"
       i = i + 1
     end
@@ -17,8 +19,9 @@ class Reservation < ActiveRecord::Base
   end
 
     ##################### SYSTEM METHODS #####################
-  def Product.load(key)
-    key = Google::APIClient::KeyUtils.load_from_pkcs12('29238ebeddba28cc9685d3151dbff93d348c7e76-privatekey.p12', 'notasecret')
+  def Reservation.load
+    uri = "#{Rails.root}/config/certificates/29238ebeddba28cc9685d3151dbff93d348c7e76-privatekey.p12"
+    key = Google::APIClient::KeyUtils.load_from_pkcs12(uri, 'notasecret')
 
     client = Google::APIClient.new(:application_name => 'Project Default Service Account',
         :application_version => '0.1.0')
@@ -32,10 +35,9 @@ class Reservation < ActiveRecord::Base
       signing_key: key)
     client.authorization.fetch_access_token!
     access_token = client.authorization.access_token
-
     session = GoogleDrive.login_with_oauth(access_token, proxy = nil)
     ws = session.spreadsheet_by_key("0As9H3pQDLg79dEZqd1YzYl80Y0Q0TjlJZDNTclFnTUE").worksheets[0]
-    self.load_preservations(ws)
+    self.load_reservations(ws)
   end
 
 end

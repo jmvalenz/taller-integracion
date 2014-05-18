@@ -56,7 +56,7 @@ gem 'paperclip'
 gem 'dropbox-sdk'
 
 gem 'fun_sftp'
-gem 'nokogiri'
+gem 'nokogiri', '1.6.2'
 
 gem 'net-ssh', '2.7.0'
 gem 'rails_config', :git => 'https://github.com/railsjedi/rails_config'
@@ -66,7 +66,8 @@ gem 'delayed_job_active_record'
 gem 'whenever', require: false
 
 gem 'google_drive'
-
+gem 'google-api-client', :require => 'google/api_client'
+gem 'certified'
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]
