@@ -18,6 +18,7 @@ orders_sftp_system:
   user: grupo5
   password: 823823k
   url: integra.ing.puc.cl
+  root: "/home/grupo5/Pedidos/"
 
 mailer:
   domain: "gmail.com"

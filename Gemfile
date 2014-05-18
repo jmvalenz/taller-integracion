@@ -55,7 +55,7 @@ gem 'dropbox-api'
 gem 'paperclip'
 gem 'dropbox-sdk'
 
-gem 'net-sftp'
+gem 'fun_sftp'
 gem 'nokogiri'
 
 gem 'net-ssh', '2.7.0'

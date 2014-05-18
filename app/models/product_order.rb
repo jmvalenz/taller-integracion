@@ -1,4 +1,4 @@
-class Product_order < ActiveRecord::Base
+class ProductOrder < ActiveRecord::Base
 
   belongs_to :order
 
