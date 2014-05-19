@@ -40,7 +40,7 @@
 // $total-columns: 12;
 
 // We use these to control various global styles
-// $body-bg: #fff;
+$body-bg: blue;
 // $body-font-color: #222;
 $body-font-family: "Open Sans", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
 // $body-font-weight: normal;
@@ -1130,12 +1130,12 @@ $info-color: #f1c40f;
 // $include-html-top-bar-classes: $include-html-classes;
 
 // Background color for the top bar
-$topbar-bg-color: #dfdcda;
+$topbar-bg-color: #ffffff;
 $topbar-bg: $topbar-bg-color;
 
 // Height and margin
 $topbar-height: 50px;
-// $topbar-margin-bottom: 0;
+// $topbar-margin-bottom: 20px;
 
 // Controlling the styles for the title in the top bar
 $topbar-title-weight: 300;
