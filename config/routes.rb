@@ -9,7 +9,7 @@ TallerIntegracion::Application.routes.draw do
 
   namespace :api do
     api_version(:module => "v1", :path => {:value => "v1"}) do
-      get "pedirProducto" => "warehouses#move_product"
+      post "pedirProducto" => "warehouses#move_product"
     end
   end
 end
