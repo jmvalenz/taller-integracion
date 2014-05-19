@@ -13,9 +13,14 @@ class Warehouse
     @depots = load_depots
   end
 
-  def ask_for_product(sku)
+  def ask_for_product(sku, amount)
     # Buscar bodega por bodega: tiene una moneita
-    Rails.logger.debug("[WAREHOUSE] pidiendo limosna")
+    amount_left = amount
+    
+    w9 = Warehouse_9.new
+    amount_left -= w9.get_sku!(sku, amount, reception_depot._id)
+
+    amount_left
   end
 
   def delivery_depot
@@ -28,6 +33,18 @@ class Warehouse
       end
     end
     @delivery_depot
+  end
+
+  def reception_depot
+    unless @reception_depot
+      depots.each do |depot|
+        if depot.type == "reception"
+          @reception_depot = depot
+          return @reception_depot
+        end
+      end
+    end
+    @reception_depot
   end
 
   def get_total_stock(sku)

@@ -70,5 +70,13 @@ gem 'google_drive'
 gem 'google-api-client', :require => 'google/api_client'
 gem 'certified'
 
+gem 'mongoid', '~> 4.0.0.beta1', git: 'https://github.com/mongoid/mongoid'
+gem 'bson'
+gem 'bson_ext'
+
+gem 'haml'
+gem 'haml-rails'
+
+gem 'foundation-rails'
 # Use debugger
 # gem 'debugger', group: [:development, :test]

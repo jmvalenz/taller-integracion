@@ -14,12 +14,10 @@ class Main
         stock = warehouse.get_total_stock(sku)
         requested_amount = product_order.amount.to_i
         product = Product.find_by(sku: sku)
-
+        next if product.blank?
         if stock > requested_amount
           available_amount = stock - Reservation.not_reserved_amount_for_customer(sku, customer_id)
           if available_amount > requested_amount
-            # ENVIAR
-
             customer = Crm.get_customer(order.address_id)
             address = customer.full_address
             price = product.price.to_i # REEMPLAZAR POR PRECIO DE DB ACCESS!!!
@@ -29,7 +27,7 @@ class Main
           end
         else
           broken = true
-          warehouse.ask_for_product(sku)
+          # warehouse.ask_for_product(sku, requested_amount - stock)
         end
       end
 
