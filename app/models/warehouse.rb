@@ -68,6 +68,7 @@ class Warehouse
       end
     end
   end
+  handle_asynchronously :move_products_to_warehouse!
 
   ##################### SYSTEM METHODS #####################
   def Warehouse.get_json_response(path, data, method, auth_string)
