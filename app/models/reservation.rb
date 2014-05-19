@@ -2,6 +2,18 @@ class Reservation < ActiveRecord::Base
 
   belongs_to :customer
 
+  def Reservation.reserved_amount(sku)
+    where(sku: sku).sum(:amount)
+  end
+
+  def Reservation.reserved_amount_for_customer(sku, customer_id)
+    where(sku: sku, customer_id: customer_id).sum(:amount)
+  end
+
+  def Reservation.not_reserved_amount_for_customer(sku, customer_id)
+    where(sku: sku).where.not(customer_id: customer_id).sum(:amount)
+  end
+
   def Reservation.load_reservations(ws)
     i = 5
     while not ws[i,1].empty? and ws[i,4].empty?  do

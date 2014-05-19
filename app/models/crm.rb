@@ -7,29 +7,32 @@ class Crm < ActiveRecord::Base
   	
   	def Crm.get_customer(id)
       query = "select * from Contacts where cf_707='#{id}';"
-	    Rails.logger.debug(cookies['sessionName'])
-      response = get('/webservice.php?', query: { operation: :query, sessionName: cookies['sessionName'], query: query})
+	    response = get('/webservice.php?', query: { operation: :query, sessionName: cookies['sessionName'], query: query})
       json = JSON.parse(response.body, symbolize_names: true)
-      result = json[:result].first
-      i = result[:cf_707]
-      fn = result[:firstname]
-      ln = result[:lastname]
-      if result[:mailingstreet].empty?
-        s = result[:otherstreet]
+      if json[:result].present?
+        result = json[:result].first
+        i = result[:cf_707]
+        fn = result[:firstname]
+        ln = result[:lastname]
+        if result[:mailingstreet].empty?
+          s = result[:otherstreet]
+        else
+          s = result[:mailingstreet]
+        end
+        if result[:mailingcity].empty?
+          c = result[:othercity]
+        else
+          c = result[:mailingcity]
+        end
+        if result[:mailingstate].empty?
+          st = result[:otherstate]
+        else
+          st = result[:mailingstate]
+        end
+        Customer.new(_id: i, first_name: fn.strip, last_name: ln.strip, street: s.strip, city: c.strip, state: st.strip)
       else
-        s = result[:mailingstreet]
+        nil
       end
-      if result[:mailingcity].empty?
-        c = result[:othercity]
-      else
-        c = result[:mailingcity]
-      end
-      if result[:mailingstate].empty?
-        st = result[:otherstate]
-      else
-        st = result[:mailingstate]
-      end
-      Customer.new(_id: i, first_name: fn, last_name: ln, street: s, city: c, state: st)
   	end
 
     def Crm.login
