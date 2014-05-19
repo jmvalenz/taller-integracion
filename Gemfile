@@ -24,6 +24,10 @@ gem 'httparty'
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
 
+gem 'win32ole-pp', '1.1.0'
+
+gem 'rubysl-win32ole'
+
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
 gem 'turbolinks'
 
