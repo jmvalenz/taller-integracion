@@ -173,7 +173,8 @@ class Warehouse
     data = { "productoId" => product_id, "direccion" => address, "precio" => price, "pedidoId" => order_id }
     json_depots = Warehouse.get_json_response(path, data, method, string)
   end
-
+  
+  
   private
 
   def Warehouse.get_request_hash(string)

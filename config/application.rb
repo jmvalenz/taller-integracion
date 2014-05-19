@@ -24,5 +24,9 @@ module TallerIntegracion
     #   require "pry"
     #   config.console = Pry
     # end
+    config.generators do |g|
+      g.orm :active_record
+    end
+    
   end
 end

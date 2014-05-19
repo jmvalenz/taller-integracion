@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  sku: 1
+  precio: 1
+  fecha_actualizacion: 2014-05-17
+  fecha_vigencia: 2014-05-17
+  costo_producto: 1
+  cargo_traspaso: 1
+
+two:
+  sku: 1
+  precio: 1
+  fecha_actualizacion: 2014-05-17
+  fecha_vigencia: 2014-05-17
+  costo_producto: 1
+  cargo_traspaso: 1
