@@ -74,6 +74,9 @@ gem 'google_drive'
 gem 'google-api-client', :require => 'google/api_client'
 gem 'certified'
 
+gem 'net-sftp'
+gem 'net-scp'
+
 gem 'mongoid', '~> 4.0.0.beta1', git: 'https://github.com/mongoid/mongoid'
 gem 'bson'
 gem 'bson_ext'
