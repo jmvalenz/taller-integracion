@@ -1,8 +1,18 @@
 class Product < ActiveRecord::Base
-
+  require 'rubygems'
+  require 'net/ssh'
+  require 'net/scp'
+  require 'csv'
+  require 'date'
+ 
+  HOST = 'integra5.ing.puc.cl'
+  USER = 'passenger'
+  PASS = '1234567890'
+  
   belongs_to :brand
   has_many :product_categories, dependent: :destroy
   has_many :categories, through: :product_categories
+  has_many :prices
 
   validates_presence_of :name, :sku
 
@@ -36,6 +46,39 @@ class Product < ActiveRecord::Base
     end
   end
 
+  def Product.reload_prices
+    Net::SSH.start( HOST, USER, :password => PASS ) do|ssh|
+      result = ssh.exec!("cd access2csv && java -jar access2csv.jar ~/Dropbox/Grupo5/DBPrecios.accdb")
+      puts result
+    end
+  end
+  
+  def Product.download_csv
+    Net::SSH.start( HOST, USER, :password => PASS ) do|ssh|
+      result = ssh.scp.download! "access2csv/Pricing.csv", "pricing/Pricing.csv"
+      puts result
+    end
+  end
+  
+  def Product.read_csv
+    text=File.open('pricing/Pricing.csv').read
+    CSV.parse(text, headers: true) do |row|
+      product = Product.find_by(sku: row[1].to_i.to_s)
+      id = product.id
+      f_act= Date.strptime(row[3].strip, "%m/%d/%Y")
+      f_vig= Date.strptime(row[4].strip, "%m/%d/%Y")
+      product.prices.create({:product_id => id.to_i, :price => row[2].to_i, :expiration_date => f_vig, 
+      :update_date => f_act, :cost => row[5].to_i, :transfer_cost => row[6].to_i})
+     end
+  end
+  
+  def actual_price
+    if self.prices.active.first
+      self.prices.active.first.price
+    else
+      self.price
+    end
+  end
 
   ## NOT FINISHED
   def Product.find_or_create_from_hash(hash)

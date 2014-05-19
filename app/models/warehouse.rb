@@ -1,15 +1,7 @@
 class Warehouse
   include ActiveModel::Model
 
-  require 'rubygems'
-  require 'net/ssh'
-  require 'net/scp'
-  require 'csv'
-  require 'date'
   STOCKS_URL = "http://bodega-integracion-2014.herokuapp.com"
-  HOST = 'integra5.ing.puc.cl'
-  USER = 'passenger'
-  PASS = '1234567890'
 
   attr_accessor :depots, :delivery_depot
 
@@ -182,30 +174,7 @@ class Warehouse
     json_depots = Warehouse.get_json_response(path, data, method, string)
   end
   
-  def reload_prices
-    Net::SSH.start( HOST, USER, :password => PASS ) do|ssh|
-      result = ssh.exec!("cd access2csv && java -jar access2csv.jar ~/Dropbox/Grupo5/DBPrecios.accdb")
-      puts result
-    end
-  end
   
-  def download_csv
-    Net::SSH.start( HOST, USER, :password => PASS ) do|ssh|
-      result = ssh.scp.download! "access2csv/Pricing.csv", "pricing/Pricing.csv"
-      puts result
-    end
-  end
-  
-  def read_csv
-    text=File.open('pricing/Pricing.csv').read
-    fecha = 0
-    CSV.parse(text, headers: true) do |row|
-      f_act= Date.strptime(row[3].strip, "%m/%d/%Y")
-      f_vig= Date.strptime(row[4].strip, "%m/%d/%Y")
-      fecha = f_vig
-      puts row
-     end
-  end
   private
 
   def Warehouse.get_request_hash(string)
