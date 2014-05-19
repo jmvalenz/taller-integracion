@@ -1,38 +1,55 @@
-require 'net/sftp'
-require 'nokogiri'
-
 class Main
 
   ################# VENTA MAYORISTA #################
 
-  #Este evento es gatillado por un nuevo pedido
-  def wholesale_process
-    # 
+  #Este metodo es llamado una vez al día
+  def Main.wholesale_process
+    Crm.login
+    Order.not_delivered.ready_to_deliver.each do |order|
+      broken = false
+      customer_id = order.customer_id
+      
+      order.product_orders.each do |product_order|
+        sku = product_order.sku
+        stock = warehouse.get_total_stock(sku)
+        requested_amount = product_order.amount.to_i
+        product = Product.find_by(sku: sku)
+        next if product.blank?
+        if stock > requested_amount
+          available_amount = stock - Reservation.not_reserved_amount_for_customer(sku, customer_id)
+          if available_amount > requested_amount
+            customer = Crm.get_customer(order.address_id)
+            address = customer.full_address
+            price = product.price.to_i # REEMPLAZAR POR PRECIO DE DB ACCESS!!!
+            # warehouse.dispatch_stock(sku, address, price, order.order_id)
+          else
+            broken = true
+          end
+        else
+          broken = true
+          # warehouse.ask_for_product(sku, requested_amount - stock)
+        end
+      end
+
+      # order.update(delivered_at: Time.now, success: !broken)
+
+      # enviar informacion a data-warehouse
+    end
+    Crm.logout
   end
 
-  def fetch_orderd
-    # Revisar FTP.
-    # Si hay pedidos nuevos, ejecuto wholesale_process
-
-
-	Net::SFTP.start('integra.ing.puc.cl', 'grupo5', :password => '823823k') do |sftp|
-	# sftp.file.open("/home/grupo5/Pedidos/pedido_1001.xml") do |file|
-		sftp.dir.foreach("/home/grupo5/Pedidos/") do |order|
-	    	
-			#Se comprueba que la orden no haya sido ingresada previamente
-			if passes_validation?(remote_file)
-	    		Order.load_orders(order)
-	    		
-	    	order.close
-		end
-	end
-
+  # CADA 10 minutos
+  def Main.fetch_orders
+    Order.check_new_orders
   end
 
-  def passes_validation
+  # Cada X minutos
+  def Main.fetch_reservations
+    Reservation.load
+  end
 
-  	return true
-
+  def Main.warehouse
+    @@warehouse ||= Warehouse.new
   end
 
 end

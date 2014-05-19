@@ -41,6 +41,7 @@ end
 
 group :development do
   gem 'hirb'
+  gem 'pry'
 end
 
 # Use ActiveModel has_secure_password
@@ -59,6 +60,9 @@ gem 'dropbox-api'
 gem 'paperclip'
 gem 'dropbox-sdk'
 
+gem 'fun_sftp'
+gem 'nokogiri', '1.6.2'
+
 gem 'net-ssh', '2.7.0'
 gem 'rails_config', :git => 'https://github.com/railsjedi/rails_config'
 gem 'versionist'
@@ -66,6 +70,17 @@ gem 'versionist'
 gem 'delayed_job_active_record'
 gem 'whenever', require: false
 
+gem 'google_drive'
+gem 'google-api-client', :require => 'google/api_client'
+gem 'certified'
 
+gem 'mongoid', '~> 4.0.0.beta1', git: 'https://github.com/mongoid/mongoid'
+gem 'bson'
+gem 'bson_ext'
+
+gem 'haml'
+gem 'haml-rails'
+
+gem 'foundation-rails'
 # Use debugger
 # gem 'debugger', group: [:development, :test]

@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class MyDropboxSessionTest < ActiveSupport::TestCase
+class TestTest < ActionMailer::TestCase
   # test "the truth" do
   #   assert true
   # end
