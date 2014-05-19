@@ -58,7 +58,7 @@ class Warehouse
   def move_products_to_warehouse!(sku, quantity, destination_depot)
     # Mover elementos a almacen de despacho y enviarlos a la bodega de destino
     products = []
-    
+    products_on_delivery_depot = []
     sync = Mutex.new
     threads = []
 
@@ -73,17 +73,30 @@ class Warehouse
       end
     end
 
+    threads << Thread.new do
+      products_on_delivery_depot << delivery_depot.get_stock(sku, quantity)
+    end
+    
+
     threads.each do |t|
       t.join
     end
 
     products.flatten!
+    products_on_delivery_depot.flatten!
 
     sync = Mutex.new
     threads = []
-    # Ahora muevo los primeros quantity productos
-    if products.length >= quantity
-      products[0..(quantity - 1)].each do |product|
+
+    # Ahora muevo los primeros quantity productos (1º los que ya estan en despacho y de ahi el resto)
+    if (products.length + products_on_delivery_depot.length) >= quantity
+      quantity_left = quantity - products_on_delivery_depot[0..(quantity - 1)].length
+      products_on_delivery_depot[0..(quantity - 1)].each do |product|
+        threads << Thread.new do
+          move_stock_to_warehouse(product[:_id], destination_depot)
+        end
+      end
+      products[0..(quantity_left - 1)].each do |product|
         threads << Thread.new do
           move_stock(product[:_id], delivery_depot._id)
           move_stock_to_warehouse(product[:_id], destination_depot) 
