@@ -69,6 +69,8 @@ gem 'whenever', require: false
 gem 'google_drive'
 gem 'google-api-client', :require => 'google/api_client'
 gem 'certified'
+gem 'net-sftp'
+gem 'net-scp'
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]

@@ -250,6 +250,8 @@ DEPENDENCIES
   httparty
   jbuilder (~> 1.2)
   jquery-rails
+  net-scp
+  net-sftp
   net-ssh (= 2.7.0)
   nokogiri (= 1.6.2)
   paperclip
