@@ -4,38 +4,50 @@ class Main
 
   #Este metodo es llamado una vez al día
   def Main.wholesale_process
-    # Cargamos todos los pedidos (orders) que tengan deliver_date <= hoy & not_delivered
+    Crm.login
     Order.not_delivered.ready_to_deliver.each do |order|
-      # PRIMERO REVISAR SI HAY STOCK PARA CADA SUB PEDIDO
-      # RECHAZAR SI NO HAY STOCK PARA CUALQUIERA
-      stocks = {}
-      reserved = {}
+      broken = false
+      customer_id = order.customer_id
+      
       order.product_orders.each do |product_order|
-        stocks[product_order.sku] = warehouse.get_total_stock(product_order.sku)
-        reserved[product_order.sku] = 0
+        sku = product_order.sku
+        stock = warehouse.get_total_stock(sku)
+        requested_amount = product_order.amount.to_i
+        product = Product.find_by(sku: sku)
+
+        if stock > requested_amount
+          available_amount = stock - Reservation.not_reserved_amount_for_customer(sku, customer_id)
+          if available_amount > requested_amount
+            # ENVIAR
+
+            customer = Crm.get_customer(order.address_id)
+            address = customer.full_address
+            price = product.price.to_i # REEMPLAZAR POR PRECIO DE DB ACCESS!!!
+            # warehouse.dispatch_stock(sku, address, price, order.order_id)
+          else
+            broken = true
+          end
+        else
+          broken = true
+          warehouse.ask_for_product(sku)
+        end
       end
-      # order.product_orders.each do |product_order|
-        # Revisar stock para sku solicitado
-        # warehouse.get_total_sku
-        # Reviso reservas del usuario del pedido
-        # Si no tiene reserva & no hay stock
-          # se quiebra
-          # enviar informacion a data-warehouse
-          # ===FIN===
-        # Si tiene reserva & no hay stock
-          # se quiebra
-          # se solicita a otra bodega
-          # enviar informacion a data-warehouse
-          # ===FIN===
-        # ===SI HAY STOCK===
-        # despachar
-        # enviar informacion a data-warehouse
+
+      # order.update(delivered_at: Time.now, success: !broken)
+
+      # enviar informacion a data-warehouse
     end
-    
+    Crm.logout
   end
 
+  # CADA 10 minutos
   def Main.fetch_orders
     Order.check_new_orders
+  end
+
+  # Cada X minutos
+  def Main.fetch_reservations
+    Reservation.load
   end
 
   def Main.warehouse
