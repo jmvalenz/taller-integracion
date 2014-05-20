@@ -16,10 +16,19 @@ class Warehouse
   def ask_for_product(sku, amount)
     # Buscar bodega por bodega: tiene una moneita
     amount_left = amount
-    
-    w9 = Warehouse_9.new
-    amount_left -= w9.get_sku!(sku, amount, reception_depot._id)
 
+    warehouses = []
+    warehouses << Warehouse_9.new
+    warehouses << Warehouse_4.new
+
+    warehouses.shuffle!
+
+    warehouses.each do |wh|
+      break if amount_left == 0
+      amount_left -= wh.get_sku!(sku, amount_left, reception_depot._id)
+    end
+
+    # Retorno cuanto me faltó por pedir
     amount_left
   end
 
@@ -93,7 +102,7 @@ class Warehouse
     threads << Thread.new do
       products_on_delivery_depot << delivery_depot.get_stock(sku, quantity)
     end
-    
+
 
     threads.each do |t|
       t.join
@@ -116,10 +125,10 @@ class Warehouse
       products[0..(quantity_left - 1)].each do |product|
         threads << Thread.new do
           move_stock(product[:_id], delivery_depot._id)
-          move_stock_to_warehouse(product[:_id], destination_depot) 
+          move_stock_to_warehouse(product[:_id], destination_depot)
         end
       end
-      
+
       threads.each do |t|
         t.join
       end
@@ -173,8 +182,8 @@ class Warehouse
     data = { "productoId" => product_id, "direccion" => address, "precio" => price, "pedidoId" => order_id }
     json_depots = Warehouse.get_json_response(path, data, method, string)
   end
-  
-  
+
+
   private
 
   def Warehouse.get_request_hash(string)

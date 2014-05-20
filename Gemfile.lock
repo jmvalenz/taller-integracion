@@ -100,6 +100,9 @@ GEM
       sass (>= 3.2.0)
     fun_sftp (0.0.9)
       net-sftp
+    gon (5.0.4)
+      actionpack (>= 2.3.0)
+      json
     google-api-client (0.7.1)
       addressable (>= 2.3.2)
       autoparse (>= 0.3.3)
@@ -291,6 +294,7 @@ DEPENDENCIES
   dropbox-sdk
   foundation-rails
   fun_sftp
+  gon
   google-api-client
   google_drive
   haml

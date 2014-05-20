@@ -85,5 +85,7 @@ gem 'haml'
 gem 'haml-rails'
 
 gem 'foundation-rails'
+
+gem 'gon'
 # Use debugger
 # gem 'debugger', group: [:development, :test]
