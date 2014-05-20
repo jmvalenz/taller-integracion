@@ -37,14 +37,7 @@ class Main
 
       address = Crm.get_customer(order.address_id).full_address
 
-      DataWarehouse::Order.create(customer_id: customer_id, order_id: order.order_id, address: address, success: !out_of_stock, delivered_at: Time.now, date_delivery: , entered_at: )
-
-
-
-
-
-
-
+      DataWarehouse::Order.create(customer_id: customer_id, order_id: order.order_id, address: address, success: !out_of_stock, delivered_at: Time.now, date_delivery: order.date_delivery, entered_at: order.entered_at)
 
       # Ejemplo para enviar a data-warehouse:
       # Crear un modelo dentro de app/models/data_warehouse/model.rb (cambiar model.rb por el modelo)
