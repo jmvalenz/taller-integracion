@@ -76,9 +76,6 @@ gem 'certified'
 gem 'net-sftp'
 gem 'net-scp'
 
-gem 'net-sftp'
-gem 'net-scp'
-
 gem 'mongoid', '~> 4.0.0.beta1', git: 'https://github.com/mongoid/mongoid'
 gem 'bson'
 gem 'bson_ext'
