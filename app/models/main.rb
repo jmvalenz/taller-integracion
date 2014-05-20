@@ -6,7 +6,7 @@ class Main
   def Main.wholesale_process
     Crm.login
     Order.not_delivered.ready_to_deliver.each do |order|
-      broken = false
+      out_of_stock = false
       customer_id = order.customer_id
 
       order.product_orders.each do |product_order|
@@ -23,10 +23,10 @@ class Main
             price = product.actual_price.to_i
             # warehouse.dispatch_stock(sku, address, price, order.order_id)
           else
-            broken = true
+            out_of_stock = true
           end
         else
-          broken = true
+          out_of_stock = true
           # warehouse.ask_for_product(sku, requested_amount - stock)
         end
       end
@@ -34,6 +34,11 @@ class Main
       # order.update(delivered_at: Time.now, success: !broken)
 
       # enviar informacion a data-warehouse
+
+      address = Crm.get_customer(order.address_id).full_address
+
+      DataWarehouse::Order.create(customer_id: customer_id, order_id: order.order_id, address: address, success: !out_of_stock, delivered_at: Time.now, date_delivery: order.date_delivery, entered_at: order.entered_at)
+
       # Ejemplo para enviar a data-warehouse:
       # Crear un modelo dentro de app/models/data_warehouse/model.rb (cambiar model.rb por el modelo)
       # Crear los fields necesarios (ver ejemplo app/models/data_warehouse/order.rb)
