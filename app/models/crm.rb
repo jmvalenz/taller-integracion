@@ -2,7 +2,7 @@ class Crm < ActiveRecord::Base
 	
 	include HTTParty
   	base_uri 'http://integra.ing.puc.cl/vtigerCRM'
-  	default_params :output => 'json'
+  	default_params output: 'json'
   	format :json
   	
   	def Crm.get_customer(id)

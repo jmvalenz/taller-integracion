@@ -24,6 +24,10 @@ gem 'httparty'
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
 
+gem 'win32ole-pp', '1.1.0'
+
+gem 'rubysl-win32ole'
+
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
 gem 'turbolinks'
 
@@ -72,5 +76,18 @@ gem 'certified'
 gem 'net-sftp'
 gem 'net-scp'
 
+gem 'net-sftp'
+gem 'net-scp'
+
+gem 'mongoid', '~> 4.0.0.beta1', git: 'https://github.com/mongoid/mongoid'
+gem 'bson'
+gem 'bson_ext'
+
+gem 'haml'
+gem 'haml-rails'
+
+gem 'foundation-rails'
+
+gem 'gon'
 # Use debugger
 # gem 'debugger', group: [:development, :test]

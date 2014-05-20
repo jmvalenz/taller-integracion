@@ -21,9 +21,23 @@ class Warehouse
     @depots = load_depots
   end
 
-  def ask_for_product(sku)
+  def ask_for_product(sku, amount)
     # Buscar bodega por bodega: tiene una moneita
-    Rails.logger.debug("[WAREHOUSE] pidiendo limosna")
+    amount_left = amount
+
+    warehouses = []
+    warehouses << Warehouse_9.new
+    warehouses << Warehouse_4.new
+
+    warehouses.shuffle!
+
+    warehouses.each do |wh|
+      break if amount_left == 0
+      amount_left -= wh.get_sku!(sku, amount_left, reception_depot._id)
+    end
+
+    # Retorno cuanto me faltó por pedir
+    amount_left
   end
 
   def delivery_depot
@@ -36,6 +50,18 @@ class Warehouse
       end
     end
     @delivery_depot
+  end
+
+  def reception_depot
+    unless @reception_depot
+      depots.each do |depot|
+        if depot.type == "reception"
+          @reception_depot = depot
+          return @reception_depot
+        end
+      end
+    end
+    @reception_depot
   end
 
   def get_total_stock(sku)
@@ -84,7 +110,7 @@ class Warehouse
     threads << Thread.new do
       products_on_delivery_depot << delivery_depot.get_stock(sku, quantity)
     end
-    
+
 
     threads.each do |t|
       t.join
@@ -107,10 +133,10 @@ class Warehouse
       products[0..(quantity_left - 1)].each do |product|
         threads << Thread.new do
           move_stock(product[:_id], delivery_depot._id)
-          move_stock_to_warehouse(product[:_id], destination_depot) 
+          move_stock_to_warehouse(product[:_id], destination_depot)
         end
       end
-      
+
       threads.each do |t|
         t.join
       end
@@ -189,6 +215,7 @@ class Warehouse
       puts row
      end
   end
+
 
   private
 
