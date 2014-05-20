@@ -313,6 +313,7 @@ DEPENDENCIES
   pry
   rails (= 4.0.4)
   rails_config!
+  rake (= 10.3.2)
   rubysl-win32ole
   sass-rails (~> 4.0.2)
   sdoc
