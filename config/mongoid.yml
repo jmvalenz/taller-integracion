@@ -72,7 +72,7 @@ production:
   sessions:
     default:
       hosts:
-        - localhost:27017
+        - integra5:27017
       username: 'mongo_datawarehouse'
       password: "1234567890"
       database: 'data_warehouse_production'
