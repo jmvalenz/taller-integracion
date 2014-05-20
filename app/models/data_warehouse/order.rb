@@ -2,15 +2,11 @@ class DataWarehouse::Order
   include Mongoid::Document
   field :customer_id, type: String
   field :order_id, type: Integer
-  # field :address, type: String
+  field :address, type: String # Guardar full adress
+  field :success, type: Boolean
+  field :delivered_at, type: DateTime # Guardar con fecha de delivery
+  field :date_delivery, type: Date
+  field :entered_at, type: DateTime
 
-  # t.integer  "order_id"
-  #   t.string   "customer_id"
-  #   t.integer  "address_id"
-  #   t.datetime "entered_at"
-  #   t.date     "date_delivery"
-  #   t.datetime "created_at"
-  #   t.datetime "updated_at"
-  #   t.datetime "delivered_at"
-  #   t.boolean  "success"
+
 end
