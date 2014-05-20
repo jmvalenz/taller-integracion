@@ -6,13 +6,14 @@ class Order < ActiveRecord::Base
   default_scope { order(entered_at: :asc) }
   scope :not_delivered, -> { where(delivered_at: nil) }
   scope :ready_to_deliver, -> { where('date_delivery <= ?', Date.today) }
+  scope :not_ready_to_deliver, -> { where('date_delivery > ?', Date.today) }
 
   def Order.load(file)
     name = File.basename(file.path)
     doc = Nokogiri::XML(file)
 
     orders = doc.at_xpath("//Pedidos")
-    
+
     date = orders.attr("fecha")
     time = orders.attr("hora")
     order_info = {
@@ -26,7 +27,7 @@ class Order < ActiveRecord::Base
     order.load_product_orders(orders)
 	end
 
-	def load_product_orders(doc)    
+	def load_product_orders(doc)
     doc.xpath("Pedido").each do |suborder|
       self.product_orders.create({
         sku: suborder.at_xpath("sku").content.strip,
@@ -39,11 +40,11 @@ class Order < ActiveRecord::Base
   def Order.check_new_orders
     conn = FunSftp::SFTPClient.new(Settings.orders_sftp_system.url, Settings.orders_sftp_system.user, Settings.orders_sftp_system.password)
     conn.chdir "Pedidos"
-    
+
     existing_orders = Order.select(:order_id).map{|id| "pedido_#{id.order_id}.xml" }
     entries = conn.entries(".", true) - [".", ".."]
     new_orders = entries - existing_orders # Esto elimina las llamadas a base de datos innecesarias
-    
+
     new_orders.each do |filename|
       order_id = filename[/pedido_(.*?).xml/, 1]
       begin
