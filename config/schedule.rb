@@ -19,9 +19,6 @@
 
 # Learn more: http://github.com/javan/whenever
 
-every 1.minute do
-  runner "Test.test.deliver"
-end
 
 # every 10.minutes do
 #   runner "Main.fetch_orders"
