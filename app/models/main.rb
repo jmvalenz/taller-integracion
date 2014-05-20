@@ -50,12 +50,12 @@ class Main
     Order.check_new_orders
   end
 
-  # Cada X minutos
+  # Cada 10 minutos
   def Main.fetch_reservations
     Reservation.load
   end
 
-  # Cada X minutos
+  # Cada 12 horas
   def Main.fetch_prices
     Product.fetch_prices
   end
