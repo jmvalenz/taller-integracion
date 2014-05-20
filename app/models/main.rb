@@ -38,8 +38,7 @@ class Main
       # Crear un modelo dentro de app/models/data_warehouse/model.rb (cambiar model.rb por el modelo)
       # Crear los fields necesarios (ver ejemplo app/models/data_warehouse/order.rb)
       # IMPORTANTE: Como esta en mongo, no es necesario correr migraciones, solo definir los fields ahi mismo
-      # Aquí en esta zona del codigo poner:
-      # (de nuevo, cambiar model por lo que se haya creado)
+      # Aquí en esta zona del codigo poner (de nuevo, cambiar Model por lo que se haya creado):
       # DataWarehouse::Model.create(field1: contenido, field2: contenido, ...)
       # ASI YA SE ESTA ENVIANDO INFORMACION AL Data Warehouse
     end
