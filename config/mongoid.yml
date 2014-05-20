@@ -70,8 +70,9 @@ test:
 
 production:
   sessions:
-    host: localhost
-    port: 27017
-    username: 'mongo_datawarehouse'
-    password: '1234567890'
-    database: 'data_warehouse_production'
+    default:
+      hosts:
+        - localhost:27017
+      username: 'mongo_datawarehouse'
+      password: '1234567890'
+      database: 'data_warehouse_production'
