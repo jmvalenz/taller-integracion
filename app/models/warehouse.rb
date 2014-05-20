@@ -8,11 +8,11 @@ class Warehouse
   def depots
     @depots ||= load_depots
   end
-
+  
   def depots!
     @depots = load_depots
   end
-
+  
   def ask_for_product(sku, amount)
     # Buscar bodega por bodega: tiene una moneita
     amount_left = amount
@@ -20,6 +20,7 @@ class Warehouse
     warehouses = []
     warehouses << Warehouse_9.new
     warehouses << Warehouse_4.new
+    warehouses << Warehouse_3.new
 
     warehouses.shuffle!
 
