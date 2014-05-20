@@ -8,6 +8,7 @@ class Main
     Order.not_delivered.ready_to_deliver.each do |order|
       out_of_stock = false
       customer_id = order.customer_id
+      customer = Crm.get_customer(order.address_id)
 
       order.product_orders.each do |product_order|
         sku = product_order.sku
@@ -18,24 +19,24 @@ class Main
         if stock > requested_amount
           available_amount = stock - Reservation.not_reserved_amount_for_customer(sku, customer_id)
           if available_amount > requested_amount
-            customer = Crm.get_customer(order.address_id)
+
             address = customer.full_address
             price = product.actual_price.to_i
-            # warehouse.dispatch_stock(sku, address, price, order.order_id)
+            warehouse.dispatch_stock(sku, address, price, order.order_id)
           else
             out_of_stock = true
           end
         else
           out_of_stock = true
-          # warehouse.ask_for_product(sku, requested_amount - stock)
+          warehouse.ask_for_product(sku, requested_amount - stock)
         end
       end
 
-      # order.update(delivered_at: Time.now, success: !broken)
+      order.update(delivered_at: Time.now, success: !broken)
 
       # enviar informacion a data-warehouse
 
-      address = Crm.get_customer(order.address_id).full_address
+      address = customer.full_address
 
       DataWarehouse::Order.create(customer_id: customer_id, order_id: order.order_id, address: address, success: !out_of_stock, delivered_at: Time.now, date_delivery: order.date_delivery, entered_at: order.entered_at)
 
