@@ -68,6 +68,7 @@ class Product < ActiveRecord::Base
   end
 
   def Product.read_csv
+    Price.destroy_all # Para cargar precios, se eliminan todos. (Alguna forma más eficiente?)
     text = File.open('pricing/Pricing.csv').read
     CSV.parse(text, headers: true) do |row|
       product = Product.find_by(sku: row[1].to_i.to_s)

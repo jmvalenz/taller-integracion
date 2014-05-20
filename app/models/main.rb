@@ -8,7 +8,7 @@ class Main
     Order.not_delivered.ready_to_deliver.each do |order|
       broken = false
       customer_id = order.customer_id
-      
+
       order.product_orders.each do |product_order|
         sku = product_order.sku
         stock = warehouse.get_total_stock(sku)
@@ -20,7 +20,7 @@ class Main
           if available_amount > requested_amount
             customer = Crm.get_customer(order.address_id)
             address = customer.full_address
-            price = product.price.to_i # REEMPLAZAR POR PRECIO DE DB ACCESS!!!
+            price = product.actual_price.to_i
             # warehouse.dispatch_stock(sku, address, price, order.order_id)
           else
             broken = true
@@ -46,6 +46,11 @@ class Main
   # Cada X minutos
   def Main.fetch_reservations
     Reservation.load
+  end
+
+  # Cada X minutos
+  def Main.fetch_prices
+    Product.fetch_prices
   end
 
   def Main.warehouse
