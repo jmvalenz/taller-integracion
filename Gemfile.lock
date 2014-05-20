@@ -304,6 +304,7 @@ DEPENDENCIES
   jbuilder (~> 1.2)
   jquery-rails
   mongoid (~> 4.0.0.beta1)!
+  moped
   net-scp
   net-sftp
   net-ssh (= 2.7.0)
