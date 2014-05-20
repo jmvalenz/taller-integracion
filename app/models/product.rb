@@ -73,8 +73,13 @@ class Product < ActiveRecord::Base
       product = Product.find_by(sku: row[1].to_i.to_s)
       f_act = Date.strptime(row[3].strip, "%m/%d/%Y")
       f_vig = Date.strptime(row[4].strip, "%m/%d/%Y")
-      product.prices.create(price: row[2], expiration_date: f_vig,
-      update_date: f_act, cost: row[5], transfer_cost: row[6]})
+      product.prices.create(
+        price: row[2],
+        expiration_date: f_vig,
+        update_date: f_act,
+        cost: row[5],
+        transfer_cost: row[6]
+      )
      end
   end
 
