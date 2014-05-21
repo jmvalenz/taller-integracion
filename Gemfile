@@ -88,5 +88,7 @@ gem 'haml-rails'
 gem 'foundation-rails'
 
 gem 'gon'
+
+gem 'newrelic_rpm'
 # Use debugger
 # gem 'debugger', group: [:development, :test]
