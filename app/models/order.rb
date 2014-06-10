@@ -4,6 +4,7 @@ class Order < ActiveRecord::Base
   has_many :product_orders, dependent: :destroy
 
   default_scope { order(entered_at: :asc) }
+  scope :delivered, -> { where.not(delivered_at: nil) }
   scope :not_delivered, -> { where(delivered_at: nil) }
   scope :ready_to_deliver, -> { where('date_delivery <= ?', Date.today) }
   scope :not_ready_to_deliver, -> { where('date_delivery > ?', Date.today) }
