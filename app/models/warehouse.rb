@@ -34,7 +34,11 @@ class Warehouse
 
     warehouses.each do |wh|
       break if amount_left == 0
-      amount_left -= wh.get_sku!(sku, amount_left, reception_depot._id)
+      begin
+        amount_left -= wh.get_sku!(sku, amount_left, reception_depot._id)
+      rescue
+        Rails.logger.warn("Bodega con problemas")
+      end
     end
 
     # Retorno cuanto me faltó por pedir
