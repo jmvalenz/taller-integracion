@@ -37,7 +37,7 @@ class Warehouse
       begin
         amount_left -= wh.get_sku!(sku, amount_left, reception_depot._id)
       rescue
-        Rails.logger.warn("Bodega con problemas")
+        Rails.logger.warn("Bodega #{wh.class} con problemas")
       end
     end
 

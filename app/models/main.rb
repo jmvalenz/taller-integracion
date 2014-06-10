@@ -32,7 +32,7 @@ class Main
         end
       end
 
-      order.update(delivered_at: Time.now, success: !broken)
+      order.update(delivered_at: Time.now, success: !out_of_stock)
 
       # enviar informacion a data-warehouse
 
