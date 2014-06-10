@@ -16,11 +16,11 @@ class Warehouse
   def depots
     @depots ||= load_depots
   end
-  
+
   def depots!
     @depots = load_depots
   end
-  
+
   def ask_for_product(sku, amount)
     # Buscar bodega por bodega: tiene una moneita
     amount_left = amount
@@ -170,7 +170,7 @@ class Warehouse
 
   def move_stock(product_id, destination_depot)
     method = "POST"
-    string = method + product_id + destination_depot
+    string = method + product_id.to_s + destination_depot
     path = "/moveStock"
     data = { "productoId" => product_id, "almacenId" => destination_depot }
     json_depots = Warehouse.get_json_response(path, data, method, string)
@@ -178,7 +178,7 @@ class Warehouse
 
   def move_stock_to_warehouse(product_id, destination_depot)
     method = "POST"
-    string = method + product_id + destination_depot
+    string = method + product_id.to_s + destination_depot
     path = "/moveStockBodega"
     data = { "productoId" => product_id, "almacenId" => destination_depot }
     json_depots = Warehouse.get_json_response(path, data, method, string)
@@ -186,26 +186,26 @@ class Warehouse
 
   def dispatch_stock(product_id, address, price, order_id)
     method = "DELETE"
-    string = method + product_id + address + price.to_s + order_id
+    string = method + product_id.to_s + address + price.to_s + order_id.to_s
     path = "/stock"
     data = { "productoId" => product_id, "direccion" => address, "precio" => price, "pedidoId" => order_id }
     json_depots = Warehouse.get_json_response(path, data, method, string)
   end
-  
+
   def reload_prices
     Net::SSH.start( HOST, USER, :password => PASS ) do|ssh|
       result = ssh.exec!("cd access2csv && java -jar access2csv.jar ~/Dropbox/Grupo5/DBPrecios.accdb")
       puts result
     end
   end
-  
+
   def download_csv
     Net::SSH.start( HOST, USER, :password => PASS ) do|ssh|
       result = ssh.scp.download! "access2csv/Pricing.csv", "pricing/Pricing.csv"
       puts result
     end
   end
-  
+
   def read_csv
     text=File.open('pricing/Pricing.csv').read
     fecha = 0
