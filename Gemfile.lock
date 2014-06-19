@@ -43,6 +43,10 @@ GEM
       thread_safe (~> 0.1)
       tzinfo (~> 0.3.37)
     addressable (2.3.5)
+    amq-protocol (1.9.2)
+    amqp (1.3.0)
+      amq-protocol (>= 1.9.2)
+      eventmachine
     arel (4.0.2)
     autoparse (0.3.3)
       addressable (>= 2.3.1)
@@ -50,7 +54,10 @@ GEM
       multi_json (>= 1.0.0)
     bson (2.2.3)
     bson_ext (1.5.1)
+    buftok (0.2.0)
     builder (3.1.4)
+    bunny (1.2.2)
+      amq-protocol (>= 1.9.2)
     capistrano (3.1.0)
       i18n
       rake (>= 10.0.0)
@@ -90,7 +97,10 @@ GEM
       oauth
     dropbox-sdk (1.6.4)
       json
+    equalizer (0.0.9)
     erubis (2.7.0)
+    eventmachine (1.0.3)
+    eventmachine (1.0.3-x86-mingw32)
     execjs (2.0.2)
     extlib (0.9.16)
     faraday (0.9.0)
@@ -130,6 +140,9 @@ GEM
     hirb (0.7.1)
     hoe (3.12.0)
       rake (>= 0.8, < 11.0)
+    http (0.6.1)
+      http_parser.rb (~> 0.6.0)
+    http_parser.rb (0.6.0)
     httparty (0.13.1)
       json (~> 1.8)
       multi_xml (>= 0.5.2)
@@ -148,6 +161,8 @@ GEM
     mail (2.5.4)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
+    memoizable (0.4.2)
+      thread_safe (~> 0.3, >= 0.3.1)
     method_source (0.8.2)
     mime-types (1.25.1)
     mini_portile (0.5.3)
@@ -159,6 +174,7 @@ GEM
     multi_json (1.10.0)
     multi_xml (0.5.5)
     multipart-post (2.0.0)
+    naught (1.0.0)
     net-scp (1.2.1)
       net-ssh (>= 2.6.5)
     net-sftp (2.1.2)
@@ -234,6 +250,7 @@ GEM
       faraday (>= 0.9.0.rc5)
       jwt (>= 0.1.5)
       multi_json (>= 1.0.0)
+    simple_oauth (0.2.0)
     slop (3.5.0)
     sprockets (2.11.0)
       hike (~> 1.2)
@@ -259,6 +276,17 @@ GEM
       polyglot (>= 0.3.1)
     turbolinks (2.2.2)
       coffee-rails
+    twitter (5.10.0)
+      addressable (~> 2.3)
+      buftok (~> 0.2.0)
+      equalizer (~> 0.0.9)
+      faraday (~> 0.9.0)
+      http (~> 0.6.0)
+      http_parser.rb (~> 0.6.0)
+      json (~> 1.8)
+      memoizable (~> 0.4.0)
+      naught (~> 1.0)
+      simple_oauth (~> 0.2.0)
     tzinfo (0.3.39)
     uglifier (2.5.0)
       execjs (>= 0.3.0)
@@ -281,8 +309,10 @@ PLATFORMS
   x86-mingw32
 
 DEPENDENCIES
+  amqp
   bson
   bson_ext
+  bunny
   capistrano (~> 3.1.0)
   capistrano-bundler
   capistrano-rails (~> 1.1.0)
@@ -318,6 +348,7 @@ DEPENDENCIES
   sass-rails (~> 4.0.2)
   sdoc
   turbolinks
+  twitter
   uglifier (>= 1.3.0)
   versionist
   whenever
