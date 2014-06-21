@@ -1,20 +1,22 @@
 class MsgRepo < ActiveRecord::Base
   require 'bunny'
-  
+  require 'json'
+
   def self.read_msg
-
-    # start a communication session with the amqp server
-    # declare a queue
-    # declare default direct exchange which is bound to all queues
-    # publish a message to the exchange which then gets routed to the queue
-    # get message from the queue
-    
-    # no estoy segura
-    channel = @conn.create_channel
-    cola = channel.queue('reposicion', :auto_delete => true)
-
-    channel.prefetch(1)
-
+    conn = Bunny.new('amqp://kncydrxj:MzJ3mNOLFh-Vnj2_AA7LSiP8x9AkTUx7@tiger.cloudamqp.com/kncydrxj')
+    conn.start
+    ch = conn.create_channel
+    q = ch.queue('reposicion', :auto_delete => true)
+    while q.message_count > 1000 #*cambiarlo a cero el lunes!!!!!!!!
+      q.pop do |delivery_info, properties, body|
+        puts body
+        msg = JSON.parse(body)
+        sku = msg['sku']
+        fecha = Time.at(msg['fecha']/1000)
+        almacenId = msg['almacenId']
+      end
+    end
+    conn.close
   end
 
   def self.connect
@@ -26,3 +28,11 @@ class MsgRepo < ActiveRecord::Base
     @conn.stop
   end  
 end
+
+
+=begin
+  t.string :sku
+  t.integer :fecha
+  t.string :almacenId
+  t.string :int
+=end

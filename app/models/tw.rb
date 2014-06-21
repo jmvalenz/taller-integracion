@@ -1,5 +1,6 @@
 class Tw < ActiveRecord::Base
   require 'twitter'
+  require 'bunny'
 
   def self.tweet(msg)
     client = Twitter::REST::Client.new do |config|
