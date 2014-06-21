@@ -13,7 +13,7 @@ class Tw < ActiveRecord::Base
     client.update(msg)
   end
 
-  def self.postOferta(sku, precio, inicio, fin)
+  def self.tweetOferta(sku, precio, inicio, fin)
     product=Item.find(sku)
 
     if(!product.internet_price)
@@ -36,3 +36,6 @@ class Tw < ActiveRecord::Base
   end
 
 end
+
+
+
