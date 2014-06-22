@@ -58,7 +58,6 @@ gem 'capistrano-rvm'
 gem 'capistrano-bundler'
 
 gem 'dropbox-api'
-gem 'paperclip'
 gem 'dropbox-sdk'
 
 gem 'fun_sftp'
@@ -89,6 +88,14 @@ gem 'foundation-rails'
 
 gem 'gon'
 
+gem 'money'
+
 gem 'newrelic_rpm'
+
+gem 'spree', '2.2.1'
+gem 'spree_gateway', :git => 'https://github.com/spree/spree_gateway.git', :branch => '2-2-stable'
+gem 'spree_auth_devise', :git => 'https://github.com/spree/spree_auth_devise.git', :branch => '2-2-stable'
+
+
 # Use debugger
 # gem 'debugger', group: [:development, :test]
