@@ -16,13 +16,14 @@ class Main
         requested_amount = product_order.amount.to_i
         product = Product.find_by(sku: sku)
         next if product.blank?
+
         if stock > requested_amount
           available_amount = stock - Reservation.not_reserved_amount_for_customer(sku, customer_id)
           if available_amount > requested_amount
 
             address = customer.full_address
-            price = product.actual_price.to_i
-            warehouse.dispatch_stock(sku, address, price, order.order_id)
+            price = product.current_price.to_i
+            warehouse.dispatch_stock!(sku, address, price, order.order_id)
           else
             out_of_stock = true
           end
@@ -68,6 +69,11 @@ class Main
 
   def Main.warehouse
     @@warehouse ||= Warehouse.new
+  end
+
+  # Cada 10 minutos
+  def Main.fetch_sales
+    Sale.read_msg
   end
 
 

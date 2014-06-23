@@ -28,3 +28,6 @@ mailer:
 domain:
   host: "integra5.ing.puc.cl"
   port: 8080
+
+cloudamqp:
+  url: "amqp://xaueclvb:SHDpRFouEJqZqImaRvImoel5HJA2VvKh@tiger.cloudamqp.com/xaueclvb"

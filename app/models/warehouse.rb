@@ -46,27 +46,43 @@ class Warehouse
   end
 
   def delivery_depot
-    unless @delivery_depot
-      depots.each do |depot|
-        if depot.type == "delivery"
-          @delivery_depot = depot
-          return @delivery_depot
-        end
+    depots.each do |depot|
+      if depot.type == "delivery"
+        @delivery_depot = depot
+        return @delivery_depot
       end
     end
     @delivery_depot
   end
 
   def reception_depot
-    unless @reception_depot
-      depots.each do |depot|
-        if depot.type == "reception"
-          @reception_depot = depot
-          return @reception_depot
-        end
+    depots.each do |depot|
+      if depot.type == "reception"
+        @reception_depot = depot
+        return @reception_depot
       end
     end
     @reception_depot
+  end
+
+  def pulmon_depot
+    depots.each do |depot|
+      if depot.type == "pulmon"
+        @pulmon_depot = depot
+        return @pulmon_depot
+      end
+    end
+    @pulmon_depot
+  end
+
+  def other_depots
+    @other_depots = []
+    depots.each do |depot|
+      if depot.type == "other"
+        @other_depots << depot
+      end
+    end
+    @other_depots
   end
 
   def get_total_stock(sku)
@@ -128,6 +144,7 @@ class Warehouse
     threads = []
 
     # Ahora muevo los primeros quantity productos (1º los que ya estan en despacho y de ahi el resto)
+    ### FALTA: Revisar si se pueden mover cosas a Delivery!! Si está llena no se mueve nada y queda la cagá
     if (products.length + products_on_delivery_depot.length) >= quantity
       quantity_left = quantity - products_on_delivery_depot[0..(quantity - 1)].length
       products_on_delivery_depot[0..(quantity - 1)].each do |product|
@@ -150,6 +167,115 @@ class Warehouse
       false
     end
   end
+
+  def clean_depots
+    total_items_moved = 1
+    while total_items_moved != 0
+      total_items_moved = 0
+      total_items_moved += clean_reception_depot
+      total_items_moved += clean_pulmon_depot
+    end
+  end
+
+  def clean_reception_depot
+    items_moved = 0
+    Rails.logger.debug("Loading depots")
+    depots!
+    reception_items = reception_depot.used_space
+    available_space = other_depots.map(&:available_space).sum
+    unless reception_items == 0 || available_space == 0
+      Rails.logger.debug("Hay productos en recepcion y espacio disponible en bodegas")
+      while (stock = reception_depot.get_skus_with_stock) && stock.present?
+        available_depot = other_depots.sort{ |a, b| b.available_space <=> a.available_space }.first
+        Rails.logger.debug("Espacio disponible en bodega #{available_depot._id}: #{available_depot.available_space}")
+        break if available_depot.available_space <= 0
+        bulk_moved = move_bulk_products(reception_depot, available_depot, stock.first[:_id], available_depot.available_space)
+        Rails.logger.debug("Se movieron #{bulk_moved} productos a bodega #{available_depot._id}")
+        items_moved += bulk_moved
+        depots!
+      end
+    else
+      Rails.logger.debug("No hay espacio en bodegas o no hay productos en recepcion")
+    end
+    items_moved
+  end
+
+  def clean_pulmon_depot
+    items_moved = 0
+    Rails.logger.debug("Loading depots")
+    depots!
+    pulmon_items = pulmon_depot.used_space
+    available_space = reception_depot.available_space
+    unless pulmon_items == 0 || available_space == 0
+      Rails.logger.debug("Hay productos en pulmon y espacio disponible en recepcion")
+      while (stock = pulmon_depot.get_skus_with_stock) && stock.present?
+        Rails.logger.debug("Espacio disponible en bodega de recepcion: #{reception_depot.available_space}")
+        break if reception_depot.available_space <= 0
+        bulk_moved = move_bulk_products(pulmon_depot, reception_depot, stock.first[:_id], reception_depot.available_space)
+        Rails.logger.debug("Se movieron #{bulk_moved} productos a bodega de recepcion")
+        items_moved += bulk_moved
+        depots!
+      end
+    else
+      Rails.logger.debug("No hay espacio en recepcion o no hay productos en pulmon")
+    end
+    items_moved
+  end
+
+  def move_bulk_products(depot_from, depot_to, sku, limit = nil)
+    sync = Mutex.new
+    threads = []
+    products = depot_from.get_stock(sku, limit)
+    moved_products = products.count
+    # Obtengo los productos para un sku dado
+    products.each do |product|
+      threads << Thread.new do
+        begin
+          move_stock(product[:_id], depot_to._id)
+        rescue
+          sync.synchronize do
+            moved_products -= 1
+          end
+        end
+      end
+    end
+
+    threads.each do |t|
+      t.join
+    end
+
+    moved_products
+  end
+
+  def dispatch_stock!(product_id, address, price, order_id)
+    move_stock(product_id, delivery_depot._id)
+    dispatch_stock(product_id, address, price, order_id)
+  end
+
+  def empty_delivery_depot
+    sync = Mutex.new
+    threads = []
+    products = delivery_depot.get_skus_with_stock
+
+    products.each do |product|
+      product_instances = delivery_depot.get_stock(product[:_id])
+      product_instances.each do |product_instance|
+        threads << Thread.new do
+          begin
+            Rails.logger.debug("Se despacha #{product_instance[:_id]}")
+            dispatch_stock(product_instance[:_id], "Vicuña Mackenna Poniente 4860, Stgo, Macul, Chile", "0", "EMPTY_DEPOT")
+          rescue
+            Rails.logger.debug("Error de conexión")
+          end
+        end
+      end
+    end
+
+    threads.each do |t|
+      t.join
+    end
+  end
+
 
   ##################### SYSTEM METHODS #####################
   def Warehouse.get_json_response(path, data, method, auth_string)

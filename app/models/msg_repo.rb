@@ -1,32 +1,51 @@
 class MsgRepo < ActiveRecord::Base
-  require 'bunny'
-  require 'json'
+
+
 
   def self.read_msg
-    conn = Bunny.new('amqp://kncydrxj:MzJ3mNOLFh-Vnj2_AA7LSiP8x9AkTUx7@tiger.cloudamqp.com/kncydrxj')
     conn.start
-    ch = conn.create_channel
-    q = ch.queue('reposicion', :auto_delete => true)
-    while q.message_count > 1000 #*cambiarlo a cero el lunes!!!!!!!!
-      q.pop do |delivery_info, properties, body|
-        puts body
-        msg = JSON.parse(body)
-        sku = msg['sku']
-        fecha = Time.at(msg['fecha']/1000)
-        almacenId = msg['almacenId']
-      end
-    end
+    canal = conn.create_channel
+    q = canal.queue('reposicion', :auto_delete => true)
+    # while q.message_count > 1000 #*cambiarlo a cero el lunes!!!!!!!!
+      delivery_info, properties, payload = q.pop
+      msg = JSON.parse(payload, symbolize_names: true)
+      sku = msg[:sku]
+      fecha = Time.at(msg[:fecha]/1000)
+      almacenId = msg[:almacenId]
+    # end
+    canal.close
     conn.close
   end
 
-  def self.connect
-    @conn = Bunny.new('amqp://kncydrxj:MzJ3mNOLFh-Vnj2_AA7LSiP8x9AkTUx7@tiger.cloudamqp.com/kncydrxj')
-    @conn.start
+  def self.suscribe_to_queue
+    conn.start
+    canal = conn.create_channel
+
+    q = canal.queue("reposicion", auto_delete: true)
+    self.consumer = q.subscribe(ack: true) do |delivery_info, properties, payload|
+      puts "Received #{payload}, message properties are #{properties.inspect} #{delivery_info}"
+    end
+
+    canal.close
+    conn.close
   end
 
-  def self.disconnect
-    @conn.stop
-  end  
+  def self.unsuscribe_from_queue
+    @@consumer.cancel
+  end
+
+  def self.conn
+    @@conn ||= Bunny.new(Settings.cloudamqp.url)
+  end
+
+  def self.consumer=(value)
+    @@consumer = value
+  end
+
+  def self.consumer
+    @@consumer
+  end
+
 end
 
 
