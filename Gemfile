@@ -81,6 +81,7 @@ gem 'net-sftp'
 gem 'net-scp'
 
 gem 'mongoid', '~> 4.0.0.beta1', git: 'https://github.com/mongoid/mongoid'
+gem 'moped'
 gem 'bson'
 gem 'bson_ext'
 
@@ -90,5 +91,7 @@ gem 'haml-rails'
 gem 'foundation-rails'
 
 gem 'gon'
+
+gem 'newrelic_rpm'
 # Use debugger
 # gem 'debugger', group: [:development, :test]

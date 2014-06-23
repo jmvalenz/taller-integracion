@@ -4,6 +4,7 @@ class Order < ActiveRecord::Base
   has_many :product_orders, dependent: :destroy
 
   default_scope { order(entered_at: :asc) }
+  scope :delivered, -> { where.not(delivered_at: nil) }
   scope :not_delivered, -> { where(delivered_at: nil) }
   scope :ready_to_deliver, -> { where('date_delivery <= ?', Date.today) }
   scope :not_ready_to_deliver, -> { where('date_delivery > ?', Date.today) }
@@ -17,7 +18,7 @@ class Order < ActiveRecord::Base
     date = orders.attr("fecha")
     time = orders.attr("hora")
     order_info = {
-      order_id: name[/pedido_(.*?).xml/, 1],
+      order_id: name[/pedido_(.*?)\.xml/, 1],
       customer_id: orders.at_xpath("rut").content.strip,
       address_id: orders.at_xpath("direccionId").content.strip,
       entered_at: DateTime.parse(date + " " + time),

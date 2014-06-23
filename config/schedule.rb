@@ -20,16 +20,16 @@
 # Learn more: http://github.com/javan/whenever
 
 
-# every 10.minutes do
-#   runner "Main.fetch_orders"
-#   runner "Main.fetch_reservations"
-# end
+every 10.minutes do
+  runner "Main.fetch_orders"
+  runner "Main.fetch_reservations"
+end
 
-# every 12.hours do
-#   runner "Main.fetch_prices"
-# end
+every 12.hours do
+  runner "Main.fetch_prices"
+end
 
-# every 24.hours do
-#   runner "Main.wholesale_process"
-# end
+every 24.hours do
+  runner "Main.wholesale_process"
+end
 
