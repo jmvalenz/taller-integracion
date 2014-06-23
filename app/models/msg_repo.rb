@@ -6,13 +6,13 @@ class MsgRepo < ActiveRecord::Base
     conn.start
     canal = conn.create_channel
     q = canal.queue('reposicion', :auto_delete => true)
-    # while q.message_count > 1000 #*cambiarlo a cero el lunes!!!!!!!!
+    while q.message_count > 0 #*cambiarlo a cero el lunes!!!!!!!!
       delivery_info, properties, payload = q.pop
       msg = JSON.parse(payload, symbolize_names: true)
       sku = msg[:sku]
       fecha = Time.at(msg[:fecha]/1000)
       almacenId = msg[:almacenId]
-    # end
+    end
     canal.close
     conn.close
   end

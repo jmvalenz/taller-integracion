@@ -7,9 +7,9 @@ class Sale < ActiveRecord::Base
     conn.start
     canal = conn.create_channel
     cola = canal.queue('ofertas', auto_delete: true)
-    # while cola.message_count > 40 #*cambiarlo a cero el lunes!!!!!!!!
+    while cola.message_count > 0
       pop_and_create_sale(cola)
-    # end
+    end
     canal.close
     conn.close
   end
