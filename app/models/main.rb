@@ -23,6 +23,7 @@ class Main
             address = customer.full_address
             price = product.actual_price.to_i
             warehouse.dispatch_stock(sku, address, price, order.order_id)
+	    Sprees.actualizarStock(sku)
           else
             out_of_stock = true
           end

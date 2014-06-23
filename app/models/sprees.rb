@@ -41,5 +41,37 @@ class Sprees
       end
     end
   end
+
+  def Sprees.cargarStock
+    products_path = Rails.root.join("db/productos.json")
+    data =File.open(products_path).read
+    texto = JSON.parse(data)
+    for i in 0...texto.length
+      if producto = Spree::Variant.find_by_sku(texto[i]['sku'])
+      	p = Spree::StockItem.find(producto.id)
+        stock = warehouse.get_total_stock(texto[i]['sku'])
+      	begin
+          p.set_count_on_hand(stock)
+      	rescue
+      	end
+      end
+    end
+  end
+
+ def Sprees.actualizarStock(sku)
+   if producto = Spree::Variant.find_by_sku(sku)
+    p = Spree::StockItem.find(producto.id)
+    stock = warehouse.get_total_stock(sku)
+    begin
+      p.set_count_on_hand(stock)
+    rescue
+    end
+    end
+  end
+
+
+  def Sprees.warehouse
+    @@warehouse ||= Warehouse.new
+  end
   
 end

@@ -6,7 +6,7 @@ class MsgOferta < ActiveRecord::Base
     conn.start
     canal = conn.create_channel
     cola = canal.queue('ofertas', :auto_delete => true)
-    while cola.message_count > 1000 #*cambiarlo a cero el lunes!!!!!!!!
+    while cola.message_count > 0 #*cambiarlo a cero el lunes!!!!!!!!
       cola.pop do |body|
         puts body
         msg = JSON.parse(body)

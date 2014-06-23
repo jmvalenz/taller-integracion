@@ -91,7 +91,7 @@ gem 'foundation-rails'
 
 gem 'gon'
 
-gem 'money'
+gem 'money', '6.0.1'
 
 gem 'newrelic_rpm'
 
