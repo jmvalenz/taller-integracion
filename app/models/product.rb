@@ -13,6 +13,7 @@ class Product < ActiveRecord::Base
   has_many :product_categories, dependent: :destroy
   has_many :categories, through: :product_categories
   has_many :prices
+  has_many :sales
 
   validates_presence_of :name, :sku
 
@@ -84,9 +85,13 @@ class Product < ActiveRecord::Base
      end
   end
 
-  def actual_price
-    if self.prices.active.first
-      self.prices.active.first.price
+  def current_price(internet = false)
+    if (ofertas = msg_ofertas.active) && ofertas.present?
+      ofertas.first.precio.to_d
+    elsif (precios = prices.active) && precios.present?
+      precios.first.price
+    elsif internet
+      self.internet_price
     else
       self.price
     end

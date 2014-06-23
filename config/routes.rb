@@ -13,6 +13,7 @@ TallerIntegracion::Application.routes.draw do
 
   # You can have the root of your site routed with "root"
   root 'welcome#index'
+  get 'dashboard' => "welcome#index"
   get 'welcome/orders'
 
   namespace :api do

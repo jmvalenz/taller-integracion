@@ -23,6 +23,7 @@
 every 10.minutes do
   runner "Main.fetch_orders"
   runner "Main.fetch_reservations"
+  runner "Main.fetch_sales"
 end
 
 every 12.hours do

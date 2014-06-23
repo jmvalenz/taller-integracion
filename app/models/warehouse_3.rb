@@ -14,7 +14,7 @@ class Warehouse_3
 
 
   def get_sku(sku, amount, depot_id)
-    response = self.class.post("/pedirProducto", query: {SKU: sku, cantidad: amount}, 
+    response = self.class.post("/pedirProducto", query: {SKU: sku, cantidad: amount},
     body: { usuario: USER, password: PASS, almacen_id: depot_id})
     json = JSON.parse(response.body, symbolize_names: true).first
     if json[:SKU]

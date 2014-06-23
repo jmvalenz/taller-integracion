@@ -18,7 +18,7 @@ class Order < ActiveRecord::Base
     date = orders.attr("fecha")
     time = orders.attr("hora")
     order_info = {
-      order_id: name[/pedido_(.*?).xml/, 1],
+      order_id: name[/pedido_(.*?)\.xml/, 1],
       customer_id: orders.at_xpath("rut").content.strip,
       address_id: orders.at_xpath("direccionId").content.strip,
       entered_at: DateTime.parse(date + " " + time),

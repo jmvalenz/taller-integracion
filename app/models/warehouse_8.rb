@@ -6,7 +6,7 @@ class Warehouse_8
     format :json
 
   USER = "grupo5"
-  PASS = Digest::SHA1.base64digest "Grupo8"
+  PASS = "1234567890"
 
   def get_sku!(sku, amount, depot_id)
     get_sku(sku, amount, depot_id)
@@ -14,10 +14,9 @@ class Warehouse_8
 
 
   def get_sku(sku, amount, depot_id)
-    response = self.class.post("/pedirProducto", query: {SKU: sku, cantidad: amount}, 
+    response = self.class.post("/pedirProducto", query: {SKU: sku, cantidad: amount},
     body: { usuario: USER, password: PASS, almacen_id: depot_id})
     json = JSON.parse(response.body, symbolize_names: true).first
-    binding.pry
     if json[:SKU]
       json[:cantidad]
     else

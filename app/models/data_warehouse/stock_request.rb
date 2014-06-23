@@ -1,4 +1,4 @@
-class DataWarehouse::Stock_request
+class DataWarehouse::StockRequest
   include Mongoid::Document
   field :customer_id, type: String
   field :order_id, type: Integer
