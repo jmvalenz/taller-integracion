@@ -2,6 +2,7 @@ class Sale < ActiveRecord::Base
 
   scope :active, -> { where(["sales.inicio < ? AND sales.fin > ?", Time.now.to_i, Time.now.to_i]) }
   belongs_to :product
+  after_create :tweet
 
   def self.read_msg
     conn.start
@@ -30,12 +31,12 @@ class Sale < ActiveRecord::Base
     @@conn ||= Bunny.new(Settings.cloudamqp.url)
   end
 
+  def self.tweet
+    twitter = Tw.new
+    prduct = Item.find(sku)
+
+    msg="OFERTA! #{prduct.name} a sólo $#{self.precio} #ofertagrupo5"
+    twitter.tweet(msg)
+  end
+
 end
-
-
-=begin
-  t.string :sku
-  t.integer :precio
-  t.integer :inicio
-  t.integer :fin
-=end
