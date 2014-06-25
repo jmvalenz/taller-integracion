@@ -54,6 +54,12 @@ class Main
     Crm.logout
   end
 
+  def Main.activate_sales
+    Sale.active.without_tws.each do |sale|
+      sale.activate
+    end
+  end
+
   # CADA 10 minutos
   def Main.fetch_orders
     Order.check_new_orders

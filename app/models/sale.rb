@@ -1,8 +1,11 @@
 class Sale < ActiveRecord::Base
 
   scope :active, -> { where(["sales.inicio < ? AND sales.fin > ?", Time.now.to_i, Time.now.to_i]) }
+  scope :without_tws, -> { includes(:tw).where(tws: { sale_id: nil }) }
   belongs_to :product
-  after_create :tweet
+  has_one :tw
+
+
 
   def self.read_msg
     conn.start
@@ -31,12 +34,15 @@ class Sale < ActiveRecord::Base
     @@conn ||= Bunny.new(Settings.cloudamqp.url)
   end
 
-  def self.tweet
-    twitter = Tw.new
-    prduct = Item.find(sku)
+  def tweet
+    msg="OFERTA! #{product.name.truncate(40)} a sólo $#{self.precio.to_i}. Solo hasta el #{} #ofertagrupo5"
+    Tw.tweet(msg)
+  end
 
-    msg="OFERTA! #{prduct.name} a sólo $#{self.precio} #ofertagrupo5"
-    twitter.tweet(msg)
+  def activate
+    #Publish on spree first!
+    self.tw = tweet
+    save
   end
 
 end
