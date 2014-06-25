@@ -24,6 +24,7 @@ every 10.minutes do
   runner "Main.fetch_orders"
   runner "Main.fetch_reservations"
   runner "Main.fetch_sales"
+  runner "Main.clean_reception_depot"
 end
 
 every 12.hours do

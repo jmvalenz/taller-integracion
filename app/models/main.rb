@@ -78,5 +78,9 @@ class Main
     Sale.read_msg
   end
 
+  def Main.clean_reception_depot
+    warehouse.clean_depots
+  end
+
 
 end
