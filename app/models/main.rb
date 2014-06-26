@@ -24,7 +24,12 @@ class Main
 
             address = customer.full_address
             price = product.current_price.to_i
-            warehouse.dispatch_stock!(sku, address, price, order.order_id)
+            begin
+              warehouse.dispatch_stock!(sku, address, price, order.order_id)
+            rescue => e
+              Rails.logger.error($!.message)
+            end
+
 	          Sprees.actualizarStock(sku)
 
           else
