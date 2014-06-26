@@ -54,6 +54,17 @@ class Main
     Crm.logout
   end
 
+  def Main.repeated_cron_jobs
+    Rails.logger.warn("Iniciando cron jobs comunes")
+    fetch_orders
+    fetch_reservations
+    fetch_sales
+    clean_reception_depot
+    activate_sales
+    Rails.logger.warn("Finalizados cron jobs comunes")
+  end
+
+
   def Main.activate_sales
     Sale.active.without_tws.each do |sale|
       sale.activate

@@ -20,12 +20,8 @@
 # Learn more: http://github.com/javan/whenever
 
 
-every 10.minutes do
-  runner "Main.fetch_orders"
-  runner "Main.fetch_reservations"
-  runner "Main.fetch_sales"
-  runner "Main.clean_reception_depot"
-  runner "Main.activate_sales"
+every 30.minutes do
+  runner "Main.repeated_cron_jobs"
 end
 
 every 12.hours do
