@@ -292,10 +292,15 @@ class Warehouse
       req.set_form_data data
     end
     req.add_field("Authorization", get_authorization_string(auth_string))
-    res = Net::HTTP.start(url.host, url.port) do |http|
-      http.request(req)
+    begin
+      res = Net::HTTP.start(url.host, url.port) do |http|
+        http.request(req)
+      end
+      JSON.parse(res.body, symbolize_names: true)
+    rescue
+      Rails.logger.warn("Error al comunicarse con Sistema de Bodegas")
+      {}
     end
-    JSON.parse(res.body, symbolize_names: true)
   end
 
   def move_stock(product_id, destination_depot)
