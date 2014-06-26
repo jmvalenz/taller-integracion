@@ -9,7 +9,10 @@ class Tw < ActiveRecord::Base
       config.access_token_secret = "kwtFWRtwzsJ3JiMJBPVYRRwwTHxJN684gTebIrGfxiqVC"
     end
 
-    client.update(msg)
+    tweet = client.update(msg)
+    self.tweet_id = tweet.id
+    save
+    self
   end
 
   def self.tweetOferta(sku, precio, inicio, fin)

@@ -36,7 +36,7 @@ class Sale < ActiveRecord::Base
 
   def tweet
     msg="OFERTA! #{product.name.truncate(40)} a sólo $#{self.precio.to_i}. Solo hasta el #{} #ofertagrupo5"
-    Tw.tweet(msg)
+    tw = Tw.tweet(msg)
   end
 
   def activate
