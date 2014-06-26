@@ -185,10 +185,8 @@ class Warehouse
       threads.each do |t|
         t.join
       end
-      products_moved
-    else
-      0
     end
+    products_moved
   end
 
   def clean_depots
