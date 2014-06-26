@@ -86,7 +86,7 @@ class Product < ActiveRecord::Base
   end
 
   def current_price(internet = false)
-    if (ofertas = msg_ofertas.active) && ofertas.present?
+    if (ofertas = sales.active) && ofertas.present?
       ofertas.first.precio.to_d
     elsif (precios = prices.active) && precios.present?
       precios.first.price
