@@ -14,10 +14,11 @@ class Api::V1::WarehousesController < Api::V1::BaseController
     if available_quantity >= quantity
       begin
         w.move_products_to_warehouse!(sku, quantity, depot_id)
+        render json: { sku: sku, cantidad: quantity }
       rescue
+        Rails.logger.warn("Hubo un error moviendo elementos a otra bodega #{params[:usuario]}")
         render json: { error: "Hubo un error interno" }
       end
-      render json: { sku: sku, cantidad: quantity }
     else
       render json: { error: "No hay suficiente stock" }
     end
