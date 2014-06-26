@@ -22,7 +22,7 @@ class Main
           if available_amount > requested_amount
 
             address = customer.full_address
-            price = product.actual_price.to_i
+            price = product.current_price.to_i
             warehouse.dispatch_stock!(sku, address, price, order.order_id)
 	          Sprees.actualizarStock(sku)
 
