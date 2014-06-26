@@ -13,8 +13,9 @@ class Api::V1::WarehousesController < Api::V1::BaseController
     available_quantity = w.get_total_stock(sku)
     if available_quantity >= quantity
       begin
-        w.move_products_to_warehouse!(sku, quantity, depot_id)
-        render json: { sku: sku, cantidad: quantity } and return
+        quantity_moved = w.move_products_to_warehouse!(sku, quantity, depot_id)
+        Rails.logger.info("Logre mover #{quantity_moved} de #{sku} a la bodega #{params[:usuario]}")
+        render json: { sku: sku, cantidad: quantity_moved } and return
       rescue
         Rails.logger.warn("Hubo un error moviendo elementos a otra bodega #{params[:usuario]}")
         render json: { error: "Hubo un error interno" } and return

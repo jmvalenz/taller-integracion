@@ -148,44 +148,46 @@ class Warehouse
     # Ahora muevo los primeros quantity productos (1º los que ya estan en despacho y de ahi el resto)
     ### FALTA: Revisar si se pueden mover cosas a Delivery!! Si está llena no se mueve nada y queda la cagá
     products_moved = 0
-    if (products.length + products_on_delivery_depot.length) >= quantity
-      quantity_left = quantity - products_on_delivery_depot[0..(quantity - 1)].length
-      products_on_delivery_depot[0..(quantity - 1)].each do |product|
-        threads << Thread.new do
+    available_products = products.length + products_on_delivery_depot.length
+    products_to_move = available_products > quantity ? quantity : available_products
+    quantity_left = quantity - products_on_delivery_depot[0..(quantity - 1)].length
+
+    products_on_delivery_depot[0..(quantity - 1)].each do |product|
+      threads << Thread.new do
+        moved_json = move_stock_to_warehouse(product[:_id], destination_depot)
+        unless !!moved_json[:error]
+          products_moved += 1
+        else
+          Rails.logged.warn("Hubo un problema al enviar un producto a otra bodega")
+        end
+      end
+    end
+    threads.each do |t|
+      t.join
+    end
+
+    threads = []
+    products[0..(quantity_left - 1)].each do |product|
+      threads << Thread.new do
+        moved_json = move_stock(product[:_id], delivery_depot._id)
+        unless !!moved_json[:error]
           moved_json = move_stock_to_warehouse(product[:_id], destination_depot)
           unless !!moved_json[:error]
             products_moved += 1
           else
             Rails.logged.warn("Hubo un problema al enviar un producto a otra bodega")
           end
-        end
-      end
-      threads.each do |t|
-        t.join
-      end
-      threads = []
-      products[0..(quantity_left - 1)].each do |product|
-        threads << Thread.new do
-          moved_json = move_stock(product[:_id], delivery_depot._id)
-          unless !!moved_json[:error]
-            moved_json = move_stock_to_warehouse(product[:_id], destination_depot)
-            unless !!moved_json[:error]
-              products_moved += 1
-            else
-              Rails.logged.warn("Hubo un problema al enviar un producto a otra bodega")
-            end
-          else
-            Rails.logged.warn("Hubo un problema al mover un producto a bodega de despacho")
-          end
+        else
+          Rails.logged.warn("Hubo un problema al mover un producto a bodega de despacho")
         end
       end
 
       threads.each do |t|
         t.join
       end
-      true
+      products_moved
     else
-      false
+      0
     end
   end
 
