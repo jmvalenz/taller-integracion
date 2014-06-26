@@ -10,9 +10,7 @@ class Tw < ActiveRecord::Base
     end
 
     tweet = client.update(msg)
-    self.tweet_id = tweet.id
-    save
-    self
+    create(tweet_id: tweet.id)
   end
 
   def self.tweetOferta(sku, precio, inicio, fin)
