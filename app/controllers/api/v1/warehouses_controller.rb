@@ -15,7 +15,8 @@ class Api::V1::WarehousesController < Api::V1::BaseController
       quantity_moved = w.move_products_to_warehouse!(sku, quantity, depot_id)
       Rails.logger.info("Logre mover #{quantity_moved} de #{sku} a la bodega #{params[:usuario]}")
       render json: { sku: sku, cantidad: quantity_moved } and return
-    rescue
+    rescue e
+      Rails.logger.error(e.message)
       Rails.logger.warn("Hubo un error moviendo elementos a otra bodega #{params[:usuario]}")
       render json: { error: "Hubo un error interno" } and return
     end
