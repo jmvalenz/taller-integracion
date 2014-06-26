@@ -11,6 +11,8 @@ class Warehouse
   USER = 'passenger'
   PASS = '1234567890'
 
+  BULK_LIMIT = 50
+
   attr_accessor :depots, :delivery_depot
 
   def depots
@@ -128,9 +130,9 @@ class Warehouse
       end
     end
 
-    threads << Thread.new do
-      products_on_delivery_depot << delivery_depot.get_stock(sku, quantity)
-    end
+    # threads << Thread.new do
+    #   products_on_delivery_depot << delivery_depot.get_stock(sku, quantity)
+    # end
 
 
     threads.each do |t|
@@ -145,17 +147,36 @@ class Warehouse
 
     # Ahora muevo los primeros quantity productos (1º los que ya estan en despacho y de ahi el resto)
     ### FALTA: Revisar si se pueden mover cosas a Delivery!! Si está llena no se mueve nada y queda la cagá
+    products_moved = 0
     if (products.length + products_on_delivery_depot.length) >= quantity
       quantity_left = quantity - products_on_delivery_depot[0..(quantity - 1)].length
       products_on_delivery_depot[0..(quantity - 1)].each do |product|
         threads << Thread.new do
-          move_stock_to_warehouse(product[:_id], destination_depot)
+          moved_json = move_stock_to_warehouse(product[:_id], destination_depot)
+          unless !!moved_json[:error]
+            products_moved += 1
+          else
+            Rails.logged.warn("Hubo un problema al enviar un producto a otra bodega")
+          end
         end
       end
+      threads.each do |t|
+        t.join
+      end
+      threads = []
       products[0..(quantity_left - 1)].each do |product|
         threads << Thread.new do
-          move_stock(product[:_id], delivery_depot._id)
-          move_stock_to_warehouse(product[:_id], destination_depot)
+          moved_json = move_stock(product[:_id], delivery_depot._id)
+          unless !!moved_json[:error]
+            moved_json = move_stock_to_warehouse(product[:_id], destination_depot)
+            unless !!moved_json[:error]
+              products_moved += 1
+            else
+              Rails.logged.warn("Hubo un problema al enviar un producto a otra bodega")
+            end
+          else
+            Rails.logged.warn("Hubo un problema al mover un producto a bodega de despacho")
+          end
         end
       end
 
@@ -222,16 +243,46 @@ class Warehouse
     items_moved
   end
 
+  def clean_delivery_depot
+    items_moved = 0
+    Rails.logger.debug("Limpiando Almacen de despacho")
+    depots!
+    delivery_items = delivery_depot.used_space
+    available_space = other_depots.map(&:available_space).sum
+    unless delivery_items == 0 || available_space == 0
+      Rails.logger.debug("Hay productos en despacho y espacio disponible en bodegas")
+      while (stock = delivery_depot.get_skus_with_stock) && stock.present?
+        available_depot = other_depots.sort{ |a, b| b.available_space <=> a.available_space }.first
+        Rails.logger.debug("Espacio disponible en bodega #{available_depot._id}: #{available_depot.available_space}")
+        break if available_depot.available_space <= 0
+        bulk_moved = move_bulk_products(delivery_depot, available_depot, stock.first[:_id], available_depot.available_space)
+        Rails.logger.debug("Se movieron #{bulk_moved} productos a bodega #{available_depot._id}")
+        items_moved += bulk_moved
+        depots!
+      end
+    else
+      Rails.logger.debug("No hay espacio en bodegas o no hay productos en delivery")
+    end
+    items_moved
+  end
+
   def move_bulk_products(depot_from, depot_to, sku, limit = nil)
     sync = Mutex.new
     threads = []
-    products = depot_from.get_stock(sku, limit)
+    # El límite de threads es el menor entre el limite y BULK_LIMIT (para testear con pocos threads)
+    max_limit = limit < BULK_LIMIT ? limit : BULK_LIMIT
+    products = depot_from.get_stock(sku, max_limit)
     moved_products = products.count
     # Obtengo los productos para un sku dado
     products.each do |product|
       threads << Thread.new do
         begin
-          move_stock(product[:_id], depot_to._id)
+          json_stock = move_stock(product[:_id], depot_to._id)
+          if !!json_stock[:error]
+            sync.synchronize do
+              moved_products -= 1
+            end
+          end
         rescue
           sync.synchronize do
             moved_products -= 1
@@ -248,6 +299,7 @@ class Warehouse
   end
 
   def dispatch_stock!(product_id, address, price, order_id)
+    # Si el producto ya está en despacho, no pasa nada con este método, así que no es problema
     move_stock(product_id, delivery_depot._id)
     dispatch_stock(product_id, address, price, order_id)
   end
@@ -299,7 +351,7 @@ class Warehouse
       JSON.parse(res.body, symbolize_names: true)
     rescue
       Rails.logger.warn("Error al comunicarse con Sistema de Bodegas")
-      {}
+      {error: "Error al comunicarse con Sistema de Bodegas"}
     end
   end
 
