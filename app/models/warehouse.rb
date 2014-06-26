@@ -171,10 +171,13 @@ class Warehouse
     threads = []
     products[0..(quantity_left - 1)].each do |product|
       threads << Thread.new do
+        Rails.logger.info("Moviendo producto #{product[:_id]} a despacho")
         moved_json = move_stock(product[:_id], delivery_depot._id)
         unless !!moved_json[:error]
+          Rails.logger.info("Exito! #{product[:_id]} esta en despacho, ahora a #{destination_depot}")
           moved_json = move_stock_to_warehouse(product[:_id], destination_depot)
           unless !!moved_json[:error]
+            Rails.logger.info("Exito!!!!")
             products_moved += 1
           else
             Rails.logged.warn("Hubo un problema al enviar un producto a otra bodega")
