@@ -42,6 +42,14 @@ class Sprees
     end
   end
 
+  def Sprees.changePrice(sku, precio)
+    if producto = Spree::Variant.find_by_sku(sku)
+    p = Spree::StockItem.find(producto.id)
+    begin
+    p.price << precio
+    rescue
+  end
+
   def Sprees.cargarStock
     products_path = Rails.root.join("db/productos.json")
     data =File.open(products_path).read

@@ -28,6 +28,8 @@ class Sale < ActiveRecord::Base
     product = Product.find_by(sku: sku)
 
     create(sku: sku, precio: precio, inicio: inicio, fin: fin, product: product)
+    #Actualizo en Spree
+    Sprees.changePrice(sku, precio)
   end
 
   def self.conn
@@ -40,7 +42,6 @@ class Sale < ActiveRecord::Base
   end
 
   def activate
-    #Publish on spree first!
     self.tw = tweet
     save
   end
