@@ -47,10 +47,18 @@ class Product < ActiveRecord::Base
     end
   end
 
+  def Product.update_on_spree
+    Product.each do |p|
+      sku = p.sku
+      price = p.current_price
+      Sprees.changePrice(sku, precio)
+  end
+
   def Product.fetch_prices
     reload_prices
     download_csv
     read_csv
+    update_on_spree
     File.delete "pricing/Pricing.csv"
   end
 
