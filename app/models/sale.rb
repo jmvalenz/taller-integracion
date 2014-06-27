@@ -35,7 +35,7 @@ class Sale < ActiveRecord::Base
   end
 
   def tweet
-    msg="OFERTA! #{product.name.truncate(40)} a sólo $#{self.precio.to_i}. Solo hasta el #{I18n.l Time.at(fin), format: "%A %d de %B", locale: :es} #ofertagrupo5"
+    msg="OFERTA! #{product.name.truncate(40)} a sólo $#{self.precio.to_s.reverse.gsub(/...(?=.)/,'\&.').reverse}. Solo hasta el #{I18n.l Time.at(fin), format: "%A %d de %B", locale: :es} #ofertagrupo5"
     tw = Tw.tweet(msg)
   end
 
