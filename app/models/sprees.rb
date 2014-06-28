@@ -44,11 +44,9 @@ class Sprees
 
   def Sprees.changePrice(sku, precio)
     if producto = Spree::Variant.find_by_sku(sku)
-      p = Spree::StockItem.find(producto.id)
-      begin
-        p.price << precio
-      rescue
-      end
+    begin
+      producto.price << precio
+    rescue
     end
   end
 
