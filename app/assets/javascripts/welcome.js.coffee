@@ -3,9 +3,68 @@
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
 
+window.initialize = ->
+  map = undefined
+  bounds = new google.maps.LatLngBounds()
+  mapOptions = mapTypeId: "roadmap"
 
+  last_five_orders = gon.lastFiveOrders
+  # Display a map on the page
+  map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions)
+  map.setTilt 45
+
+  # Multiple Markers
+  markers = last_five_orders
+  # Info Window Content
+  infoWindowContent = []
+  i = 0
+  while i < last_five_orders.length
+    infoWindowContent.push ["<div class=\"info_content\">" + "<h3>Orden</h3>" + "<p> Cliente: " + last_five_orders[i][0] + "</p>" + "</div>"]
+    i++
+  # Display multiple markers on a map
+  infoWindow = new google.maps.InfoWindow()
+  marker = undefined
+  i = undefined
+
+  # Loop through our array of markers & place each one on the map
+  i = 0
+  while i < markers.length
+    position = new google.maps.LatLng(markers[i][1], markers[i][2])
+    bounds.extend position
+    marker = new google.maps.Marker(
+      position: position
+      map: map
+      title: markers[i][0]
+    )
+
+    # Allow each marker to have an info window
+    google.maps.event.addListener marker, "click", ((marker, i) ->
+      ->
+        infoWindow.setContent infoWindowContent[i][0]
+        infoWindow.open map, marker
+        return
+    )(marker, i)
+
+    # Automatically center the map fitting all markers on the screen
+    map.fitBounds bounds
+    i++
+
+  # Override our map zoom level once our fitBounds function runs (Make sure it only runs once)
+  boundsListener = google.maps.event.addListener((map), "bounds_changed", (event) ->
+    @setZoom 14
+    google.maps.event.removeListener boundsListener
+    return
+  )
+  return
 
 $ ->
+  script = document.createElement('script');
+  script.src = "http://maps.googleapis.com/maps/api/js?sensor=false&callback=initialize";
+  document.body.appendChild(script);
+
+
+
+
   $("#warehouses").highcharts
     chart:
       type: "bar"

@@ -62,8 +62,10 @@ end
 
 namespace :images do
   task :symlink do
-    run "rm -rf #{release_path}/public/spree"
-    run "ln -nfs #{shared_path}/spree #{release_path}/public/spree"
+    on roles(:app) do
+      execute "rm -rf #{release_path}/public/spree"
+      execute "ln -nfs #{shared_path}/spree #{release_path}/public/spree"
+    end
   end
 end
-after "bundle:install", "images:symlink"
+after :"bundler:install", :"images:symlink"

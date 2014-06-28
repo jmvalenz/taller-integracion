@@ -102,6 +102,8 @@ gem 'spree_zero_stock_products'
 
 gem 'deface'
 
+gem 'geocoder'
+
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]

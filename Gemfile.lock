@@ -172,6 +172,7 @@ GEM
       activerecord (>= 4.0.0)
     fun_sftp (0.0.9)
       net-sftp
+    geocoder (1.2.1)
     gon (5.0.4)
       actionpack (>= 2.3.0)
       json
@@ -460,6 +461,7 @@ DEPENDENCIES
   dropbox-sdk
   foundation-rails
   fun_sftp
+  geocoder
   gon
   google-api-client
   google_drive

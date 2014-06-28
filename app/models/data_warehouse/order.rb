@@ -9,5 +9,8 @@ class DataWarehouse::Order
   field :date_delivery, type: Date
   field :entered_at, type: DateTime
 
+  def coordinates
+    Geocoder.search(address).first.coordinates
+  end
 
 end
