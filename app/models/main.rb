@@ -5,87 +5,9 @@ class Main
   #Este metodo es llamado una vez al día
   def Main.wholesale_process
     Rails.logger.info("***************** INICIO WHOLESALE PROCESS ******************")
-    Crm.login
     Order.not_delivered.ready_to_deliver.each do |order|
-      out_of_stock = false
-      customer_id = order.customer_id
-      customer = Crm.get_customer(order.address_id)
-
-      order.product_orders.each do |product_order|
-        sku = product_order.sku
-        stock = warehouse.get_total_stock(sku)
-        requested_amount = product_order.amount.to_i
-        product = Product.find_by(sku: sku)
-        next if product.blank?
-
-        if stock > requested_amount
-          available_amount = stock - Reservation.not_reserved_amount_for_customer(sku, customer_id)
-          if available_amount > requested_amount
-
-            address = customer.full_address
-            price = product.current_price.to_i
-            begin
-              warehouse.dispatch_stock!(sku, address, price, order.order_id)
-            rescue => e
-              Rails.logger.error($!.message)
-            end
-
-	          Sprees.actualizarStock(sku)
-
-          elsif available_amount < requested_amount
-            amount_left = warehouse.ask_for_product(sku, requested_amount - available_amount)
-            if amount_left == 0
-              address = customer.full_address
-              price = product.current_price.to_i
-              begin
-                warehouse.dispatch_stock!(sku, address, price, order.order_id)
-              rescue => e
-                Rails.logger.error($!.message)
-              end
-
-  	          Sprees.actualizarStock(sku)
-            end 
-            
-          else
-            out_of_stock = true
-          end
-        elsif stock < requested_amount
-          available_amount = stock - Reservation.not_reserved_amount_for_customer(sku, customer_id)
-          amount_left = warehouse.ask_for_product(sku, requested_amount - available_amount)
-          if amount_left == 0
-            address = customer.full_address
-            price = product.current_price.to_i
-            begin
-              warehouse.dispatch_stock!(sku, address, price, order.order_id)
-            rescue => e
-              Rails.logger.error($!.message)
-            end
-
-	          Sprees.actualizarStock(sku)
-          end
-        else 
-          out_of_stock = true
-          warehouse.ask_for_product(sku, requested_amount - stock)
-        end
-      end
-
-      order.update(delivered_at: Time.now, success: !out_of_stock)
-
-      # enviar informacion a data-warehouse
-
-      address = customer.full_address
-
-      DataWarehouse::Order.create(customer_id: customer_id, order_id: order.order_id, address: address, success: !out_of_stock, delivered_at: Time.now, date_delivery: order.date_delivery, entered_at: order.entered_at)
-
-      # Ejemplo para enviar a data-warehouse:
-      # Crear un modelo dentro de app/models/data_warehouse/model.rb (cambiar model.rb por el modelo)
-      # Crear los fields necesarios (ver ejemplo app/models/data_warehouse/order.rb)
-      # IMPORTANTE: Como esta en mongo, no es necesario correr migraciones, solo definir los fields ahi mismo
-      # Aquí en esta zona del codigo poner (de nuevo, cambiar Model por lo que se haya creado):
-      # DataWarehouse::Model.create(field1: contenido, field2: contenido, ...)
-      # ASI YA SE ESTA ENVIANDO INFORMACION AL Data Warehouse
+      order.process
     end
-    Crm.logout
     Rails.logger.info("***************** FIN WHOLESALE PROCESS ******************")
   end
 

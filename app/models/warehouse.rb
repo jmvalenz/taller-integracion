@@ -43,8 +43,8 @@ class Warehouse
       end
     end
 
-    # Retorno cuanto me faltó por pedir
-    amount_left
+    # Retorno cuanto logré conseguir
+    amount - amount_left
   end
 
   def delivery_depot
@@ -303,10 +303,94 @@ class Warehouse
     moved_products
   end
 
-  def dispatch_stock!(product_id, address, price, order_id)
-    # Si el producto ya está en despacho, no pasa nada con este método, así que no es problema
-    move_stock(product_id, delivery_depot._id)
-    dispatch_stock(product_id, address, price, order_id)
+  def dispatch_stock!(sku, quantity, address, price, order_id)
+    # Mover elementos a almacen de despacho y enviarlos a la bodega de destino
+    products = []
+    products_on_delivery_depot = []
+    sync = Mutex.new
+    threads = []
+
+    # Obtengo los productos para un sku dado
+    threads << Thread.new do
+      products_on_reception_depot << reception.get_stock(sku, quantity)
+    end
+    depots.each do |depot|
+      if depot.type != "delivery" && depot.type != "reception"
+        threads << Thread.new do
+          sync.synchronize do
+            products << depot.get_stock(sku, quantity - products.length)
+          end
+        end
+      end
+    end
+
+    # threads << Thread.new do
+    #   products_on_delivery_depot << delivery_depot.get_stock(sku, quantity)
+    # end
+
+
+    threads.each do |t|
+      t.join
+    end
+
+    products_on_reception_depot.flatten!
+    products.flatten!
+    products_on_delivery_depot.flatten!
+
+    sync = Mutex.new
+    threads = []
+
+    # Ahora muevo los primeros quantity productos (1º los que ya estan en despacho y de ahi el resto)
+    ### FALTA: Revisar si se pueden mover cosas a Delivery!! Si está llena no se mueve nada y queda la cagá
+    products_moved = 0
+    available_products = products_on_reception_depot.length + products.length + products_on_delivery_depot.length
+    Rails.logger.info("En este momento hay #{available_products} productos de #{sku} en bodega")
+    products_to_move = available_products > quantity ? quantity : available_products
+    Rails.logger.info("De los cuales pretendo enviar #{products_to_move}")
+
+    products_on_delivery_depot[0..(quantity - 1)].each do |product|
+      threads << Thread.new do
+        moved_json = move_stock_to_warehouse(product[:_id], destination_depot)
+        unless !!moved_json[:error]
+          products_moved += 1
+        else
+          Rails.logged.warn("Hubo un problema al despachar")
+        end
+      end
+    end
+    threads.each do |t|
+      t.join
+    end
+
+    quantity_left = quantity - products_moved
+    return products_moved if quantity_left <= 0
+
+    products_moved = 0
+    threads = []
+    (products_on_reception_depot + products)[0..(quantity_left - 1)].each do |product|
+      threads << Thread.new do
+        Rails.logger.info("Moviendo producto #{product[:_id]} a despacho")
+        moved_json = move_stock(product[:_id], delivery_depot._id)
+        unless !!moved_json[:error]
+          Rails.logger.info("Exito! #{product[:_id]} esta en despacho, ahora a cliente")
+          # moved_json = move_stock_to_warehouse(product[:_id], destination_depot)
+          moved_json = dispatch_stock(product[:_id], address, price, order_id)
+          unless !!moved_json[:error]
+            Rails.logger.info("Exito!!!!")
+            products_moved += 1
+          else
+            Rails.logged.warn("Hubo un problema al enviar un producto a cliente")
+          end
+        else
+          Rails.logged.warn("Hubo un problema al mover un producto a bodega de despacho")
+        end
+      end
+
+      threads.each do |t|
+        t.join
+      end
+    end
+    quantity_left - products_moved
   end
 
   def empty_delivery_depot
