@@ -79,7 +79,7 @@ class Order < ActiveRecord::Base
 
     # enviar informacion a data-warehouse
 
-    address = customer.full_address
+    address = crm_customer.full_address
 
     DataWarehouse::Order.create(customer_id: customer_id, order_id: order_id, address: address, success: !out_of_stock, delivered_at: Time.now, date_delivery: date_delivery, entered_at: entered_at)
 
