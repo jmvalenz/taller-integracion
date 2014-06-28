@@ -438,10 +438,13 @@ class Warehouse
       res = Net::HTTP.start(url.host, url.port) do |http|
         http.request(req)
       end
-      JSON.parse(res.body, symbolize_names: true)
+      response = JSON.parse(res.body, symbolize_names: true)
+      Rails.logger.info(response.inspect)
+      return response
     rescue
-      Rails.logger.warn("Error al comunicarse con Sistema de Bodegas")
-      {error: "Error al comunicarse con Sistema de Bodegas"}
+      response = {error: "Error al comunicarse con Sistema de Bodegas"}
+      Rails.logger.info(response.inspect)
+      return response
     end
   end
 
