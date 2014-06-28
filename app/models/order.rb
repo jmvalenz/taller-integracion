@@ -75,13 +75,13 @@ class Order < ActiveRecord::Base
       end
     end
 
-    order.update(delivered_at: Time.now, success: success)
+    update(delivered_at: Time.now, success: success)
 
     # enviar informacion a data-warehouse
 
     address = customer.full_address
 
-    DataWarehouse::Order.create(customer_id: customer_id, order_id: order.order_id, address: address, success: !out_of_stock, delivered_at: Time.now, date_delivery: order.date_delivery, entered_at: order.entered_at)
+    DataWarehouse::Order.create(customer_id: customer_id, order_id: order_id, address: address, success: !out_of_stock, delivered_at: Time.now, date_delivery: date_delivery, entered_at: entered_at)
 
     Rails.logger.debug("*******__ FIN proceso de orden #{order_id} __********")
 
