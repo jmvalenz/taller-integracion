@@ -5,7 +5,7 @@ TallerIntegracion::Application.routes.draw do
   # If you would like to change where this engine is mounted, simply change the :at option to something different.
   #
   # We ask that you don't use the :as option here, as Spree relies on it being the default of "spree"
-  mount Spree::Core::Engine, :at => '/'
+  mount Spree::Core::Engine, :at => '/store'
           resources :crms
 
   # The priority is based upon order of creation: first created -> highest priority.
@@ -13,7 +13,7 @@ TallerIntegracion::Application.routes.draw do
 
   # You can have the root of your site routed with "root"
   root 'welcome#index'
-  get 'dashboard' => "welcome#index"
+  get 'dashboard' => "welcome#dashboard", as: "dashboard"
   get 'welcome/orders'
 
   namespace :api do
