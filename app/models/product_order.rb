@@ -36,7 +36,7 @@ class ProductOrder < ActiveRecord::Base
     end
 
     out_of_stock = amount_to_send - sent_amount
-    DataWarehouse::Dispatch.create(customer_id: order.customer_id, order_id: order.order_id, address: address, items_delivered: sent_amount, items_not_delivered: out_of_stock, delivered_at: Time.now, date_delivery: order.date_delivery, entered_at: order.entered_at)
+    DataWarehouse::Dispatch.create(customer_id: order.customer_id, order_id: order.order_id, street_address: customer.street_address, address: address, items_delivered: sent_amount, items_not_delivered: out_of_stock, delivered_at: Time.now, date_delivery: order.date_delivery, entered_at: order.entered_at)
     Sprees.actualizarStock(sku)
 
     Rails.logger.debug("********_ FIN proceso de pedido _**********")

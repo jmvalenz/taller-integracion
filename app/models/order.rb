@@ -81,11 +81,13 @@ class Order < ActiveRecord::Base
 
     address = crm_customer.full_address
 
-    DataWarehouse::Order.create(customer_id: customer_id, order_id: order_id, address: address, success: success, delivered_at: Time.now, date_delivery: date_delivery, entered_at: entered_at)
+    DataWarehouse::Order.create(customer_id: customer_id, order_id: order_id, street_address: crm_customer.street_address, address: address, success: success, delivered_at: Time.now, date_delivery: date_delivery, entered_at: entered_at)
 
     Rails.logger.debug("*******__ FIN proceso de orden #{order_id} __********")
 
     Crm.logout
+
+    success
   end
 
 end
