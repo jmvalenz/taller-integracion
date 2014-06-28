@@ -313,7 +313,7 @@ class Warehouse
 
     # Obtengo los productos para un sku dado
     threads << Thread.new do
-      products_on_reception_depot << reception.get_stock(sku, quantity)
+      products_on_reception_depot << reception_depot.get_stock(sku, quantity)
     end
     depots.each do |depot|
       if depot.type != "delivery" && depot.type != "reception"
