@@ -32,10 +32,38 @@ class Main
 
 	          Sprees.actualizarStock(sku)
 
+          elsif available_amount < requested_amount
+            amount_left = warehouse.ask_for_product(sku, requested_amount - available_amount)
+            if amount_left == 0
+              address = customer.full_address
+              price = product.current_price.to_i
+              begin
+                warehouse.dispatch_stock!(sku, address, price, order.order_id)
+              rescue => e
+                Rails.logger.error($!.message)
+              end
+
+  	          Sprees.actualizarStock(sku)
+            end 
+            
           else
             out_of_stock = true
           end
-        else
+        elsif stock < requested_amount
+          available_amount = stock - Reservation.not_reserved_amount_for_customer(sku, customer_id)
+          amount_left = warehouse.ask_for_product(sku, requested_amount - available_amount)
+          if amount_left == 0
+            address = customer.full_address
+            price = product.current_price.to_i
+            begin
+              warehouse.dispatch_stock!(sku, address, price, order.order_id)
+            rescue => e
+              Rails.logger.error($!.message)
+            end
+
+	          Sprees.actualizarStock(sku)
+          end
+        else 
           out_of_stock = true
           warehouse.ask_for_product(sku, requested_amount - stock)
         end
