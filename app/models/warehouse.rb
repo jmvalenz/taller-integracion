@@ -307,6 +307,7 @@ class Warehouse
     # Mover elementos a almacen de despacho y enviarlos a la bodega de destino
     products = []
     products_on_delivery_depot = []
+    products_on_reception_depot = []
     sync = Mutex.new
     threads = []
 
