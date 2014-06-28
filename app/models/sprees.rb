@@ -1,6 +1,6 @@
 class Sprees
   include ActiveModel::Model
-  
+
   def Sprees.cargarJson
     products_path = Rails.root.join("db/productos.json")
     data =File.open(products_path).read
@@ -10,7 +10,7 @@ class Sprees
     r_marcas = marcas.root
     texto = JSON.parse(data)
     for i in 0...texto.length
-     		
+
       if not taxon1 = Spree::Taxon.find_by_name(texto[i]['marca'])
         Spree::Taxon.create(:name => texto[i]['marca'], :parent_id => r_marcas.id)
       end
@@ -21,7 +21,7 @@ class Sprees
       end
     end
   end
-      
+
   def Sprees.cargarSpree
     products_path = Rails.root.join("db/productos.json")
     data =File.open(products_path).read
@@ -44,10 +44,12 @@ class Sprees
 
   def Sprees.changePrice(sku, precio)
     if producto = Spree::Variant.find_by_sku(sku)
-    p = Spree::StockItem.find(producto.id)
-    begin
-    p.price << precio
-    rescue
+      p = Spree::StockItem.find(producto.id)
+      begin
+        p.price << precio
+      rescue
+      end
+    end
   end
 
   def Sprees.cargarStock
@@ -66,14 +68,14 @@ class Sprees
     end
   end
 
- def Sprees.actualizarStock(sku)
-   if producto = Spree::Variant.find_by_sku(sku)
-    p = Spree::StockItem.find(producto.id)
-    stock = warehouse.get_total_stock(sku)
-    begin
-      p.set_count_on_hand(stock)
-    rescue
-    end
+  def Sprees.actualizarStock(sku)
+    if producto = Spree::Variant.find_by_sku(sku)
+      p = Spree::StockItem.find(producto.id)
+      stock = warehouse.get_total_stock(sku)
+      begin
+        p.set_count_on_hand(stock)
+      rescue
+      end
     end
   end
 
@@ -81,5 +83,5 @@ class Sprees
   def Sprees.warehouse
     @@warehouse ||= Warehouse.new
   end
-  
+
 end
