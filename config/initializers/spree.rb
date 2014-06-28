@@ -9,6 +9,8 @@ Spree.config do |config|
   # Example:
   # Uncomment to override the default site name.
   # config.site_name = "Spree Demo Site"
+  # config.admin_interface_logo = 'logo/some_other_logo.png'
+  config.logo = '/assets/logo-central-ahorro.png'
   config.show_zero_stock_products = false # Default is true
 
 end
