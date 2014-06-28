@@ -52,6 +52,7 @@ class Product < ActiveRecord::Base
       sku = p.sku
       price = p.current_price
       Sprees.changePrice(sku, precio)
+    end
   end
 
   def Product.fetch_prices
