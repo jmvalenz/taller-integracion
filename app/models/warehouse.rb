@@ -439,11 +439,9 @@ class Warehouse
         http.request(req)
       end
       response = JSON.parse(res.body, symbolize_names: true)
-      Rails.logger.info(response.inspect)
       return response
     rescue
       response = {error: "Error al comunicarse con Sistema de Bodegas"}
-      Rails.logger.info(response.inspect)
       return response
     end
   end
