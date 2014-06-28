@@ -57,35 +57,35 @@ class Order < ActiveRecord::Base
       f.close
       File.delete(f)
     end
+  end
 
-    def process
-      Crm.login
-      crm_customer = Crm.get_customer(address_id)
-      success = true
+  def process
+    Crm.login
+    crm_customer = Crm.get_customer(address_id)
+    success = true
 
-      Rails.logger.debug("*******__ Iniciando proceso de orden #{order_id} __********")
-      product_orders.each do |product_order|
+    Rails.logger.debug("*******__ Iniciando proceso de orden #{order_id} __********")
+    product_orders.each do |product_order|
 
-        general_success = product_order.process(crm_customer)
+      general_success = product_order.process(crm_customer)
 
-        # Si llega a haber una que falle, todas fallan
-        if success
-          success = general_success
-        end
+      # Si llega a haber una que falle, todas fallan
+      if success
+        success = general_success
       end
-
-      order.update(delivered_at: Time.now, success: success)
-
-      # enviar informacion a data-warehouse
-
-      address = customer.full_address
-
-      DataWarehouse::Order.create(customer_id: customer_id, order_id: order.order_id, address: address, success: !out_of_stock, delivered_at: Time.now, date_delivery: order.date_delivery, entered_at: order.entered_at)
-
-      Rails.logger.debug("*******__ FIN proceso de orden #{order_id} __********")
-
-      Crm.logout
     end
+
+    order.update(delivered_at: Time.now, success: success)
+
+    # enviar informacion a data-warehouse
+
+    address = customer.full_address
+
+    DataWarehouse::Order.create(customer_id: customer_id, order_id: order.order_id, address: address, success: !out_of_stock, delivered_at: Time.now, date_delivery: order.date_delivery, entered_at: order.entered_at)
+
+    Rails.logger.debug("*******__ FIN proceso de orden #{order_id} __********")
+
+    Crm.logout
   end
 
 end
