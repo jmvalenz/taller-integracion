@@ -345,7 +345,7 @@ class Warehouse
     ### FALTA: Revisar si se pueden mover cosas a Delivery!! Si está llena no se mueve nada y queda la cagá
     products_moved = 0
     available_products = products_on_reception_depot.length + products.length + products_on_delivery_depot.length
-    Rails.logger.info("En este momento hay #{available_products} productos de #{sku} en bodega")
+    Rails.logger.info("En este momento hay por lo menos #{available_products} productos de #{sku} en bodega")
     products_to_move = available_products > quantity ? quantity : available_products
     Rails.logger.info("De los cuales pretendo enviar #{products_to_move}")
 
@@ -391,7 +391,7 @@ class Warehouse
         t.join
       end
     end
-    quantity_left - products_moved
+    quantity - quantity_left + products_moved
   end
 
   def empty_delivery_depot

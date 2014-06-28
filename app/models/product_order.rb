@@ -3,7 +3,7 @@ class ProductOrder < ActiveRecord::Base
   belongs_to :order
 
   def process(customer)
-    Rails.logger.debug("********_ Iniciando proceso de pedido #{sku} _**********")
+    Rails.logger.debug("********_ Iniciando proceso de pedido #{sku} por #{amount.to_i} unidades _**********")
 
     warehouse = Warehouse.new
     stock = warehouse.get_total_stock(sku)
