@@ -26,3 +26,5 @@ config/environments/*.local.yml
 
 
 taller-integracion.sublime-workspace
+
+public/spree/
