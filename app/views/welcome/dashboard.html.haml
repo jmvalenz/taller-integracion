@@ -25,14 +25,14 @@
       .box.text-center
         %h4= DataWarehouse::Order.where(success: false).count
         %p Quiebres de stock
-    .small-6.medium-3.columns
-      .box.text-center
-        %h4= DataWarehouse::Dispatch.sum(:items_delivered)
-        %p Productos despachados
-    .small-6.medium-3.columns
-      .box.text-center
-        %h4= DataWarehouse::Dispatch.sum(:items_not_delivered)
-        %p Productos faltantes
+    / .small-6.medium-3.columns
+    /   .box.text-center
+    /     %h4= DataWarehouse::Dispatch.sum(:items_delivered)
+    /     %p Productos despachados
+    / .small-6.medium-3.columns
+    /   .box.text-center
+    /     %h4= DataWarehouse::Dispatch.sum(:items_not_delivered)
+    /     %p Productos faltantes
   .row
     .small-12.columns
       .box
