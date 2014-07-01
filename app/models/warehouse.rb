@@ -160,7 +160,7 @@ class Warehouse
         unless !!moved_json[:error]
           products_moved += 1
         else
-          Rails.logged.warn("Hubo un problema al enviar un producto a otra bodega")
+          Rails.logger.warn("Hubo un problema al enviar un producto a otra bodega")
         end
       end
     end
@@ -180,10 +180,10 @@ class Warehouse
             Rails.logger.info("Exito!!!!")
             products_moved += 1
           else
-            Rails.logged.warn("Hubo un problema al enviar un producto a otra bodega")
+            Rails.logger.warn("Hubo un problema al enviar un producto a otra bodega")
           end
         else
-          Rails.logged.warn("Hubo un problema al mover un producto a bodega de despacho")
+          Rails.logger.warn("Hubo un problema al mover un producto a bodega de despacho")
         end
       end
 
@@ -355,7 +355,7 @@ class Warehouse
         unless !!moved_json[:error]
           products_moved += 1
         else
-          Rails.logged.warn("Hubo un problema al despachar")
+          Rails.logger.warn("Hubo un problema al despachar")
         end
       end
     end
@@ -380,10 +380,10 @@ class Warehouse
             Rails.logger.info("Exito!!!!")
             products_moved += 1
           else
-            Rails.logged.warn("Hubo un problema al enviar un producto a cliente")
+            Rails.logger.warn("Hubo un problema al enviar un producto a cliente")
           end
         else
-          Rails.logged.warn("Hubo un problema al mover un producto a bodega de despacho")
+          Rails.logger.warn("Hubo un problema al mover un producto a bodega de despacho")
         end
       end
 
