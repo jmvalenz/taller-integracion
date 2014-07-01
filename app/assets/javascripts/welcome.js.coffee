@@ -49,12 +49,12 @@ window.initialize = ->
     map.fitBounds bounds
     i++
 
-  # Override our map zoom level once our fitBounds function runs (Make sure it only runs once)
-  boundsListener = google.maps.event.addListener((map), "bounds_changed", (event) ->
-    @setZoom 14
-    google.maps.event.removeListener boundsListener
-    return
-  )
+  # # Override our map zoom level once our fitBounds function runs (Make sure it only runs once)
+  # boundsListener = google.maps.event.addListener((map), "bounds_changed", (event) ->
+  #   @setZoom 14
+  #   google.maps.event.removeListener boundsListener
+  #   return
+  # )
   return
 
 $ ->
