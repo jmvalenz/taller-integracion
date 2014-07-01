@@ -22,6 +22,19 @@ class Depot
     })
   end
 
+  def type_to_s
+    case type
+    when "pulmon"
+      "Pulmón"
+    when "delivery"
+      "Despacho"
+    when "reception"
+      "Recepción"
+    else
+      "General"
+    end
+  end
+
   def available_space
     total_space - used_space
   end

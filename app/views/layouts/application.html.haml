@@ -3,7 +3,7 @@
   %head
     %meta{charset: "utf-8"}/
     %meta{content: "width=device-width, initial-scale=1.0", name: "viewport"}/
-    %title= content_for?(:title) ? yield(:title) : "Bodega Grupo 5"
+    %title= content_for?(:title) ? yield(:title) : "Central Ahorro"
     = include_gon(camel_case: true, init: true)
     = stylesheet_link_tag    "application"
     = javascript_include_tag "vendor/modernizr"
@@ -18,7 +18,7 @@
               = link_to(root_url) do
                 .top-bar-icon.left
                 %h1
-                  Grupo 5
+                  Central Ahorro
 
           / %section.top-bar-section
           /   %ul.right

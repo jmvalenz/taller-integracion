@@ -71,7 +71,7 @@ $ ->
     title:
       text: "Elementos en bodega"
     xAxis:
-      categories: gon.depots.map (depot) -> depot.type
+      categories: gon.depots.map (depot) -> depot.type_to_s
     yAxis:
       title:
         text: "Elementos"
@@ -138,7 +138,7 @@ $ ->
           gon.delayedOrders
         ]
         {
-          name: "No atrasados"
+          name: "A tiempo"
           y: gon.notDelayedOrders
           sliced: true
           selected: true

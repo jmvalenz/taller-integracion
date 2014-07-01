@@ -1,23 +1,46 @@
 .dashboard
-  .row
-    %h3.text-center Dashboard Grupo 5
+  .row{ data: { equalizer: "" } }
+    %h3.text-center Dashboard
     .small-12.medium-7.columns
-      .box
+      .box{data: { "equalizer-watch" => "" }}
         #warehouses
     .small-12.medium-5.columns
       .row
         .small-12.columns
-          .box
+          .box{data: { "equalizer-watch" => "" }}
             .row
-              .small-12.medium-6.columns
+              .small-12.columns
                 #orders
-              .small-12.medium-6.columns
+            .row
+              .small-12.columns
+                %h5.text-center Total:
+                %h6.text-center #{ @not_delayed_orders.count } pedidos a tiempo
+                %h6.text-center #{ @delayed_orders.count } pedidos con retraso
   .row
-    .small-12
+    .small-6.medium-3.columns
+      .box.text-center
+        %h4= Order.delivered.count
+        %p Pedidos procesados
+    .small-6.medium-3.columns
+      .box.text-center
+        %h4= DataWarehouse::Order.where(success: false).count
+        %p Quiebres de stock
+    .small-6.medium-3.columns
+      .box.text-center
+        %h4= DataWarehouse::Dispatch.sum(:items_delivered)
+        %p Productos despachados
+    .small-6.medium-3.columns
+      .box.text-center
+        %h4= DataWarehouse::Dispatch.sum(:items_not_delivered)
+        %p Productos faltantes
+  .row
+    .small-12.columns
       .box
         %h3.text-center Últimos 5 pedidos enviados
-        #map_wrapper
-          #map_canvas.mapping
+        .row
+          .small-12.columns
+            #map_wrapper
+              #map_canvas.mapping
 
   /     .row
   /       .small-6.columns
@@ -28,20 +51,3 @@
   /         .box.text-center
   /           %h4 18.6K
   /           %p Data
-  / .row
-  /   .small-6.medium-3.columns
-  /     .box.text-center
-  /       %h4 1.2K
-  /       %p Data Here
-  /   .small-6.medium-3.columns
-  /     .box.text-center
-  /       %h4 1.2K
-  /       %p Data Here
-  /   .small-6.medium-3.columns
-  /     .box.text-center
-  /       %h4 1.2K
-  /       %p Data Here
-  /   .small-6.medium-3.columns
-  /     .box.text-center
-  /       %h4 1.2K
-  /       %p Data Here
